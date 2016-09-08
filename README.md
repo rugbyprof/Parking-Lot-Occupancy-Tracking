@@ -14,7 +14,7 @@ Mwsu Eureka Parking Lot Detection Project
   - Edge Detection
   - Object Detection
   - Boundary Definitions
-  - etc.
+  - [glossery](http://usabilityetc.com/articles/image-processing-glossary/)
   
 
 ## Image Processing Links
