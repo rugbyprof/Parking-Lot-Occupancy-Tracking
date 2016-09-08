@@ -1,6 +1,10 @@
 # Eureka-ParkingLotDetection
 Mwsu Eureka Parking Lot Detection Project
 
+## Wiki
+
+Don't forget we need to keep our wiki updated: [wiki](./wiki)
+
 ## Video Surveillance Software (we need to choose)
 - Linux
   - https://zoneminder.com/
