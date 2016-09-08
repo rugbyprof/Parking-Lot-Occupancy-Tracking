@@ -1,5 +1,5 @@
 # Eureka-ParkingLotDetection
-Mwsu Eureka Parking Lot Detection Project
+Parking Lot Occupancy Tracking
 
 ## Wiki
 
