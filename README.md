@@ -10,11 +10,16 @@ Mwsu Eureka Parking Lot Detection Project
   
 
 ## Image Processing
+
+Relevant Terms for our project
+
   - Color Detection
   - Edge Detection
   - Object Detection
-  - Boundary Definitions
-  - [glossery](http://usabilityetc.com/articles/image-processing-glossary/)
+  - Boundaries
+  - Bounding Box
+  - Etc.
+  - [Glossery](http://usabilityetc.com/articles/image-processing-glossary/)
   
 
 ## Image Processing Links
