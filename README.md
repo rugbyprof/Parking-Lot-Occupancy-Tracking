@@ -3,7 +3,7 @@ Mwsu Eureka Parking Lot Detection Project
 
 ## Wiki
 
-Don't forget we need to keep our wiki updated: [wiki](./wiki)
+Don't forget we need to keep our **[wiki](../../wiki)** updated!
 
 ## Video Surveillance Software (we need to choose)
 - Linux
