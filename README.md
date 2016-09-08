@@ -19,7 +19,7 @@ Mwsu Eureka Parking Lot Detection Project
 
 ## Image Processing Libraries
 
-    - http://www.pyimagesearch.com/2014/08/04/opencv-python-color-detection/
+- http://www.pyimagesearch.com/2014/08/04/opencv-python-color-detection/
     
 
 ## Background Publications
