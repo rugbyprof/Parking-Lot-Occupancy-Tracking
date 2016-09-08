@@ -22,6 +22,9 @@ to go.
 - [West Virginia U Parking Lot](http://www.opentopia.com/webcam/11480) (good example)
 
 ![](./images/west_virginia/animation.gif)
+Current Still Photo: http://cemrcam1.cemr.wvu.edu/snapshotJPEG?resolution=640x480
+Current Live Feed: http://cemrcam1.cemr.wvu.edu/nphMotionJpeg?Resolution=640x480&Quality=Clarity
+Current Control Panel:  http://cemrcam1.cemr.wvu.edu/CgiStart?page=Single&Language=0
 
 - [Southern Maine Dorm](http://www.opentopia.com/webcam/16165) (dirty)
 
