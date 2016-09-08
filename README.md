@@ -19,7 +19,13 @@ Don't forget we need to keep our **[wiki](../../wiki)** updated!
 ![](./images/west_virginia/animation.gif)
 
 - [Southern Maine Dorm](http://www.opentopia.com/webcam/16165) (dirty)
+
+![](./images/southern_maine/animation.gif)
+
 - [Czech Republic](http://www.opentopia.com/webcam/16031) (good shadow)
+
+![](./images/czech_republic/animation.gif)
+
 - http://www.opentopia.com/webcam/11235
 - http://www.opentopia.com/webcam/16271
 
