@@ -14,6 +14,11 @@ Don't forget we need to keep our **[wiki](../../wiki)** updated!
   
 
 ## Open Street Cams
+
+Here are a few unprotected surveillance cameras of parking lots. These can be used as test images since we have zero control
+over camera angle or the coverage area. If we can make our software work on these (maybe not Southern Maine) we will be good
+to go.
+
 - [West Virginia U Parking Lot](http://www.opentopia.com/webcam/11480) (good example)
 
 ![](./images/west_virginia/animation.gif)
