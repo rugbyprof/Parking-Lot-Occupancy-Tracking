@@ -15,6 +15,9 @@ Don't forget we need to keep our **[wiki](../../wiki)** updated!
 
 ## Open Street Cams
 - [West Virginia U Parking Lot](http://www.opentopia.com/webcam/11480) (good example)
+
+![](./images/west_virginia/animation.gif)
+
 - [Southern Maine Dorm](http://www.opentopia.com/webcam/16165) (dirty)
 - [Czech Republic](http://www.opentopia.com/webcam/16031) (good shadow)
 - http://www.opentopia.com/webcam/11235
