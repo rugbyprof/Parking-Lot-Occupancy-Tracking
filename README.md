@@ -13,6 +13,13 @@ Don't forget we need to keep our **[wiki](../../wiki)** updated!
   - https://www.ispyconnect.com/
   
 
+## Open Street Cams
+- [West Virginia U Parking Lot](http://www.opentopia.com/webcam/11480) (good example)
+- [Southern Maine Dorm](http://www.opentopia.com/webcam/16165) (dirty)
+- [Czech Republic](http://www.opentopia.com/webcam/16031) (good shadow)
+- http://www.opentopia.com/webcam/11235
+- http://www.opentopia.com/webcam/16271
+
 ## Image Processing
 
 Relevant Terms for our project
