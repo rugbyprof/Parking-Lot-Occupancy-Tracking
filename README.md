@@ -63,3 +63,4 @@ Relevant Terms for our project
   - [COUNTING AVAILABLE PARKING SPACE USING IMAGE PROCESSING](./papers/counting_available.pdf)
   - [Intelligent Parking Management System Based on Image Processing](./papers/intelligent_management_system.pdf)
   - [Vacant Parking Space Detection in Static Images](./papers/vacant_parking_space_detection.pdf)
+  - [Parking Lot Space Detection](./papers/parking_lot_space_detection.pdf)
