@@ -55,6 +55,7 @@ Relevant Terms for our project
 
 - http://www.pyimagesearch.com/2014/08/04/opencv-python-color-detection/
 - https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html
+- http://www.pyimagesearch.com/
     
 
 ## Background Publications
