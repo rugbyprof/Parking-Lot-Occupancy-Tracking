@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import json
 
+
 #class definition for a Point
 class Point:
     #constructor
@@ -95,7 +96,7 @@ def draw_line(img, line, color):
 
 
 
-with open('lot.json') as data_file:
+with open('newParking.json') as data_file:
     data = json.load(data_file)
 
 img = cv2.imread('img.jpg')
