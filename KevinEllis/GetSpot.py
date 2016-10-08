@@ -1,4 +1,5 @@
 import cv2
+import os
 import json
 import numpy as np
 from matplotlib import pyplot as plt   
@@ -42,7 +43,8 @@ def histogram(image,newimg):
     # to be application dependent
     #print "flattened feature vector size: %d" % (np.array(features).flatten().shape)
     #plt.show()
-    plt.savefig(newimg + 'Hist' + '.png')
+    dirname = 'Histograms'
+    plt.savefig(os.path.join(dirname, newimg +  'Hist' + '.png'))
     plt.close()
 
 def getxval(num):
@@ -59,7 +61,8 @@ def drawline(topleft,topright,botright,botleft,img):
     cv2.imwrite("Lines.jpg",img)
 
 def makenewimage(newimg,spot):
-    cv2.imwrite(newimg + '.jpg' , spot)
+    dirname = 'Spots'
+    cv2.imwrite(os.path.join(dirname, newimg + '.jpg'), spot)
 
 def maskimage(topleft,topright,botright,botleft):
     mask = np.zeros(image.shape, dtype=np.uint8)
