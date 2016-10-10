@@ -1,8 +1,11 @@
+import os
 from matplotlib import pyplot as plt
 import numpy as np
 import cv2
 import json
 
+histogram_dir = 'Histograms'
+spot_dir = 'Spots'
 
 #class definition for a Point
 class Point:
@@ -42,7 +45,12 @@ class Line:
         return y
 
 
-def histogram(image):
+#same image to file
+def saveImg(img, dir, name):
+    cv2.imwrite(os.path.join(dir, name + ".jpg"), img)
+
+#create histogram and save figure
+def histogram(image, name):
     # grab the image channels, initialize the tuple of colors,
     # the figure and the flattened feature vector
     chans = cv2.split(image)
@@ -71,29 +79,61 @@ def histogram(image):
     # normally not use 256 bins for each channel, a choice
     # between 32-96 bins are normally used, but this tends
     # to be application dependent
-    print "flattened feature vector size: %d" % (np.array(features).flatten().shape)
-    plt.show()
+    #print "flattened feature vector size: %d" % (np.array(features).flatten().shape)
 
-def cutParkingSpot(img, point1, point2, idx):
-    print "clipping: ", point1.x, point1.y, point2.x, point2.y
+    #save figure and close
+    plt.savefig(os.path.join(histogram_dir, "Hist_" + name + ".png"))
+    plt.close()
+
+
+#cuts a parking spot and resizes the result to 1/10 of the original image
+def cutParkingSpot(img, point1, point2, name):
     parkingSpot = img[point1.y:point2.y, point1.x:point2.x]
     width, height = img.shape[:2]
-    print width, height
     w,h = parkingSpot.shape[:2]
-    print "w:h:", w,h
-    res = cv2.resize(parkingSpot, (width/3, height/3))
-    cv2.imshow("spot created", res)
-    histogram(res)
+    resized_img = cv2.resize(parkingSpot, (width/10, height/10))
+
+    return resized_img
     
-    #cv2.imwrite('spot'+str(idx)+'.jpg',res)
-    #cv2.imshow("m", img)
-    cv2.waitKey(0)
-    return
-    
+
 #draws line with color between point1 and point2 on img
 def draw_line(img, line, color):
     cv2.line(img, (line.startPt.x, line.startPt.y), (line.endPt.x, line.endPt.y), color, 1)
 
+
+#finds minimum x and y values from end points of 2 lines
+def find_min_point(line1, line2):
+    min_x = min(line1.startPt.x, line1.endPt.x, line2.startPt.x, line2.endPt.x)
+    min_y = min(line1.startPt.y, line1.endPt.y, line2.startPt.y, line2.endPt.y)
+
+    min_point = Point([min_x, min_y])
+    return min_point
+
+
+#finds maximum x and y values from end points of 2 lines
+def find_max_point(line1, line2):
+    max_x = max(line1.startPt.x, line1.endPt.x, line2.startPt.x, line2.endPt.x)
+    max_y = max(line1.startPt.y, line1.endPt.y, line2.startPt.y, line2.endPt.y)
+
+    max_point = Point([max_x, max_y])
+    return max_point
+
+
+#returns a masked image given the original image, and two horizontal lines defining
+#the region of interest
+def maskImage(img, ver_line1, ver_line2):
+    top_left = (ver_line1.startPt.x, ver_line1.startPt.y)
+    bot_left = (ver_line1.endPt.x, ver_line1.endPt.y)
+    top_right = (ver_line2.startPt.x, ver_line2.startPt.y)
+    bot_right = (ver_line2.endPt.x, ver_line2.endPt.y)
+
+    mask = np.zeros(img.shape, dtype=np.uint8)
+    roi_corners = np.array([[top_left, top_right, bot_right,bot_left]], dtype=np.int32)  # fill the ROI so it doesn't get wiped out when the mask is applied
+    channel_count = img.shape[2]  # i.e. 3 or 4 depending on your image
+    ignore_mask_color = (255,)*channel_count
+    cv2.fillPoly(mask, roi_corners, ignore_mask_color)
+    masked_image = cv2.bitwise_and(img, mask)  # apply the mask
+    return(masked_image)
 
 
 with open('newParking.json') as data_file:
@@ -132,14 +172,29 @@ for row_data in data:
                 [v_line[1], bot_h_line.get_y_intersect(v_line[1])]
             )
         
-        #if len(p_lot[-1]['V']) > 0:
-            #cutParkingSpot(img, p_lot[-1]['V'][-1].startPt, v_line_obj.endPt, len(p_lot[-1]['V']))
+        #Start extracting spots after first vertical line
+        if len(p_lot[-1]['V']) > 0:            
+            #mask image
+            maskedImg = maskImage(img, p_lot[-1]['V'][-1], v_line_obj)
 
-        #add object to p_lot
+            #get row and column of spot
+            spotName = "Row_" + str(len(p_lot)) + "_Col_" + str(len(p_lot[-1]['V']))
+
+            #extract spot from maskedImage and save
+            parking_spot = cutParkingSpot(
+                maskedImg, 
+                find_min_point(p_lot[-1]['V'][-1], v_line_obj), 
+                find_max_point(p_lot[-1]['V'][-1], v_line_obj),
+                spotName
+            )
+            saveImg(parking_spot, spot_dir, spotName)
+
+            #make histogram and save
+            histogram(parking_spot, spotName)
+
+        #add line object to p_lot
         p_lot[-1]['V'].append(v_line_obj)
         draw_line(img, v_line_obj, black_color)
-
-        
 
 cv2.imwrite('out.jpg', img)
 
