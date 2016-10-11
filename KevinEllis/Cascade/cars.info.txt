@@ -1,0 +1,29 @@
+Spots-Grey/Row_0 Col_0 1 0 0 50 70
+Spots-Grey/Row_0 Col_1 1 0 0 50 70
+Spots-Grey/Row_0 Col_3 1 0 0 50 70
+Spots-Grey/Row_1 Col_0 1 0 0 50 70
+Spots-Grey/Row_1 Col_1 1 0 0 50 70
+Spots-Grey/Row_1 Col_2 1 0 0 50 70
+Spots-Grey/Row_1 Col_3 1 0 0 50 70
+Spots-Grey/Row_1 Col_4 1 0 0 50 70
+Spots-Grey/Row_1 Col_5 1 0 0 50 70
+Spots-Grey/Row_1 Col_6 1 0 0 50 70
+Spots-Grey/Row_1 Col_7 1 0 0 50 70
+Spots-Grey/Row_1 Col_8 1 0 0 50 70
+Spots-Grey/Row_1 Col_9 1 0 0 50 70
+Spots-Grey/Row_1 Col_10 1 0 0 50 70
+Spots-Grey/Row_1 Col_11 1 0 0 50 70
+Spots-Grey/Row_1 Col_12 1 0 0 50 70
+Spots-Grey/Row_2 Col_0 1 0 0 50 70
+Spots-Grey/Row_2 Col_1 1 0 0 50 70
+Spots-Grey/Row_2 Col_2 1 0 0 50 70
+Spots-Grey/Row_2 Col_3 1 0 0 50 70
+Spots-Grey/Row_2 Col_4 1 0 0 50 70
+Spots-Grey/Row_2 Col_5 1 0 0 50 70
+Spots-Grey/Row_2 Col_6 1 0 0 50 70
+Spots-Grey/Row_2 Col_7 1 0 0 50 70
+Spots-Grey/Row_2 Col_8 1 0 0 50 70
+Spots-Grey/Row_2 Col_10 1 0 0 50 70
+Spots-Grey/Row_2 Col_11 1 0 0 50 70
+
+
