@@ -45,6 +45,13 @@ class Line:
         return y
 
 
+def average(image, index):
+    sum = 0
+    for row in image:
+        for col in row:
+            sum += col[index]
+    print float(sum) / (len(image) * len(image[0]))
+
 #same image to file
 def saveImg(img, dir, name):
     cv2.imwrite(os.path.join(dir, name + ".jpg"), img)
@@ -54,6 +61,8 @@ def histogram(image, name):
     # grab the image channels, initialize the tuple of colors,
     # the figure and the flattened feature vector
     chans = cv2.split(image)
+    #print chans
+
     colors = ("b", "g", "r")
     plt.figure()
     plt.title("'Flattened' Color Histogram")
@@ -139,7 +148,7 @@ def maskImage(img, ver_line1, ver_line2):
 with open('newParking.json') as data_file:
     data = json.load(data_file)
 
-img = cv2.imread('img.jpg')
+img = cv2.imread('oth.jpg')
 
 black_color = (0,0,0)
 
@@ -191,7 +200,8 @@ for row_data in data:
 
             #make histogram and save
             histogram(parking_spot, spotName)
-
+            
+            print spotName, np.average(np.mean(parking_spot, 0), 0)
         #add line object to p_lot
         p_lot[-1]['V'].append(v_line_obj)
         draw_line(img, v_line_obj, black_color)
