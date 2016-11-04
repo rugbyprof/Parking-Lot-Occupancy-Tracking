@@ -39,7 +39,7 @@ def histogram(image,newimg):
     dirname = 'Histograms'
     plt.savefig(os.path.join(dirname, newimg +  'Hist' + '.png'))
     plt.close()
-def comparehist():
+def comparehist(): #not used ATM
     hist1 = mpimg.imread("Row_1 Col_12Hist.png")
     hist2 = mpimg.imread("Row_2 Col_11Hist.png")
 
@@ -72,12 +72,8 @@ def makenewimage(newimg,spot):
     dirname = 'Spots'
     res = cv2.resize(spot,(50, 70))
     cv2.imwrite(os.path.join(dirname, newimg + '.jpg'), res)
-def makegreyscaleimage(newimg,spot):
-    greydirname = 'Spots-Grey'
-    res = cv2.resize(spot,(50, 70))
-    gray_image = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite(os.path.join(greydirname, newimg + '.jpg'),gray_image)
-def maskimage(topleft,topright,botright,botleft):
+
+def maskimage(topleft,topright,botright,botleft): 
     mask = np.zeros(image.shape, dtype=np.uint8)
     roi_corners = np.array([[topleft, topright, botright,botleft]], dtype=np.int32)  # fill the ROI so it doesn't get wiped out when the mask is applied
     channel_count = image.shape[2]  # i.e. 3 or 4 depending on your image
@@ -85,8 +81,57 @@ def maskimage(topleft,topright,botright,botleft):
     cv2.fillPoly(mask, roi_corners, ignore_mask_color)
     masked_image = cv2.bitwise_and(image, mask)  # apply the mask
     return(masked_image)
+def average(image,index):
+    sum = 0
+    count = 0
+    for row in image:
+        for col in row:
+            if col[index] !=0:
+                sum += col[index]
+                count = count+1
+    return float(sum) / count
 
+def averagecolors(image): #returns an array of [R,G,B] for that spot
+    avg = [average(image,0) , average(image,1) , average(image, 2)]
+    return (avg) #returns touple on rgbavg
+def detection(spotbeinglookedat): #VERY IMPORTANT NEEDS TWEAKING DOES NOT WORK
 
+    redchange = abs(spotbeinglookedat[0] - 160.4572)
+    greenchange = abs(spotbeinglookedat[1] - 151.398)
+    bluechange = abs(spotbeinglookedat[2] - 141.49)
+    #print(redchange,greenchange,bluechange)
+    if (redchange > 6 or greenchange > 20 or bluechange > 45):
+        #print("Spot Full! ")
+        return
+    else:
+        #print("Spot Empty! ")
+        return
+def canny(spotforcanny):
+    img = spotforcanny
+    sigma=0.33
+    v = np.median(img)
+    lower = int(max(0, (1.0 - sigma) * v))
+    upper = int(min(255, (1.0 + sigma) * v))
+    edges = cv2.Canny(img,lower,upper)
+    plt.subplot(121),plt.imshow(img,cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(122),plt.imshow(edges,cmap = 'gray')
+    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def sharpen(spot):
+    #Create the identity filter, but with the 1 shifted to the right!
+    kernel = np.zeros( (9,9), np.float32)
+    kernel[4,4] = 2.0   #Identity, times two! 
+    #Create a box filter:
+    boxFilter = np.ones( (9,9), np.float32) / 81.0
+    #Subtract the two:
+    kernel = kernel - boxFilter
+    #Note that we are subject to overflow and underflow here...but I believe that
+    # filter2D clips top and bottom ranges on the output, plus you'd need a
+    # very bright or very dark pixel surrounded by the opposite type.
+    custom = cv2.filter2D(spot, -1, kernel)
+    return custom
 
 if __name__ == "__main__":
     image = cv2.imread('image2.jpg', -1)
@@ -113,6 +158,11 @@ if __name__ == "__main__":
             maxpoint = getmax(topleft,topright,botleft,botright)
 
             spot = masked_image[minpoint[1]:maxpoint[1], minpoint[0]:maxpoint[0]]
-            histogram(spot,newimg)
-            makenewimage(newimg,spot)
-    comparehist()
+            #histogram(spot,newimg)
+            #makenewimage(newimg,spot)
+            #spotrgb = averagecolors(spot)
+            gray_image = cv2.cvtColor(spot, cv2.COLOR_BGR2GRAY)
+            sharp = sharpen(spot)
+            canny(sharp)
+            #print(newimg , spotrgb)
+            #detection(spotrgb)
