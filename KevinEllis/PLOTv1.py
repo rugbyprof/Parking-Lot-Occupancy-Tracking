@@ -107,12 +107,12 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
     edges = cv2.Canny(spotforcanny,lower,upper)
-    plt.subplot(121),plt.imshow(spotforcanny,cmap = 'gray')
-    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(edges,cmap = 'gray')
+    #plt.subplot(121),plt.imshow(spotforcanny,cmap = 'gray')
+    #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.plot(122),plt.imshow(edges,cmap = 'gray')
     plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
     dirname = 'edges'
-    plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png')) #Saves the image to Edgess folder
+    plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
     plt.close()
 def sharpen(spot): #Sharpens the image for better edge detection
     #Create the identity filter, but with the 1 shifted to the right!
@@ -127,7 +127,9 @@ def sharpen(spot): #Sharpens the image for better edge detection
     # very bright or very dark pixel surrounded by the opposite type.
     custom = cv2.filter2D(spot, -1, kernel)
     return custom
-def detectviacanny():
+def detectviacanny(): #### WORK IN PROGRESS
+    cv2.imread('Row_1 Col0Edge.png', -1)
+
     return
 if __name__ == "__main__":
     image = cv2.imread('image2.jpg', -1)
