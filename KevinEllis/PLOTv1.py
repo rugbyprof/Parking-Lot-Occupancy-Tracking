@@ -111,7 +111,18 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
     plt.plot(122),plt.imshow(edges,cmap = 'gray')
     plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-    dirname = 'edges'
+    dirname = 'canny edges'
+    plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
+    plt.close()
+def laplaceedgedetection(spotforlaplace,parkingspacelocation):
+    kernel_size = 3
+    scale = 4
+    delta = 2
+    ddepth = cv2.CV_16S
+    edges = cv2.Laplacian(spotforlaplace,ddepth,ksize = kernel_size,scale = scale,delta = delta)
+    plt.plot(122),plt.imshow(edges,cmap = 'gray')
+    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+    dirname = 'laplace edge'
     plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
     plt.close()
 def sharpen(spot): #Sharpens the image for better edge detection
@@ -161,3 +172,4 @@ if __name__ == "__main__":
             gray_image = cv2.cvtColor(maskedparkingspace, cv2.COLOR_BGR2GRAY)
             sharp = sharpen(gray_image)
             cannyedgedetection(sharp,parkingspacelocation)
+            laplaceedgedetection(gray_image,parkingspacelocation)
