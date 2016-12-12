@@ -13,20 +13,16 @@
 ### Question 1
 (25 pts)
 
-Match the following words, with the definition below. Not all definitions will be used. Write your answers on your answer sheet like so: 
-
-- 1: X
-- 2: Y
-- 3: Z
+Match the following words, with the definition below: 
 
 |  Ans   |       Word                    |   Ans   |       Word                |
 |:---:|:-------------------------|:-----:|----------------------|
-|  1   | Attributes                 |   7   | Constructor  |
-|  2   |     Overloading           |   8   | Class  |
-|  3   | Data Member             |    9  | Encapsulation  |
-|  4   | Immutable              |   10   | Information Hiding  |
-|  5   | Inheritance           |    11  | Instance Variable  |
-|  6   | Method                 |   12   | Mutable  |
+|      | Attributes                 |      | Constructor  |
+|     |     Overloading           |       | Class  |
+|      | Data Member              |       | Encapsulation  |
+|      | Immutable               |       | Information Hiding  |
+|      | Inheritance             |      | Instance Variable  |
+|      | Method                  |       | Mutable  |
 
 
 <div style="page-break-after: always;"></div>
@@ -160,7 +156,7 @@ Failure to complete assessment  will result in failure on the final exam.
 | 6 | Did all your programs run (of the ones turned in)? | Yes - No  | 
 | 7 | Are you taking advanced structures and algorithms next semester?  | Yes - No    | 
 | 8 | Are you a Computer Science Major?  | Yes - No  | 
-| 9 | If you answered no to number 8, what is your major? | "__________________________ "   | 
+| 9 | If you answered no to number 8, what is your major? | ![](https://d3vv6lp55qjaqc.cloudfront.net/items/3b3J090R2x3g1B1a0A3a/Screenshot%202016-12-12%2015.03.09.png?X-CloudApp-Visitor-Id=1094421) | 
 
 <div style="page-break-after: always;"></div>
 
@@ -181,3 +177,5 @@ Failure to complete assessment  will result in failure on the final exam.
 | M | A method which is automatically invoked when the object is destroyed. |
 | N | A language mechanism for restricting access to some of the object's components, also a language construct that facilitates the bundling of data with the methods (or other functions) operating on that data. | 
 | O | Is an object whose state cannot be modified after it is created. | 
+
+[blk]: http://www-cdr.stanford.edu/~petrie/blank.gif "none"
