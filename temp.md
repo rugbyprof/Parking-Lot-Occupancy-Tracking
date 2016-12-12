@@ -32,16 +32,13 @@ Match the following words, with the definition below. Not all definitions will b
 
 ### Question 2
 (15 pts)
-
 Given the following fraction class and usage in "main":
-
 ```python
 def gcd(a, b):
     """Return greatest common divisor using Euclid's Algorithm."""
     while b:      
         a, b = b, a % b
     return a
-
 def lcm(a, b):
     """Return lowest common multiple."""
     return a * b // gcd(a, b)
@@ -52,26 +49,19 @@ class Fraction(object):
         self.num = n
         self.den = d
         self.reduce()
-
     def __str__(self):
         return "%d / %d" % (self.num,self.den)
-
     def reduce(self):
         thegcd = gcd(self.num,self.den)
         self.num /= thegcd
         self.den /= thegcd
-        
-
-
+      
 if __name__=="__main__":
-
     f1 = Fraction(12,36)
     f2 = Fraction(5,8)
     f3 = f1 + f2
     f4 = f1 * f1
-
 ```
-
 Complete the necessary methods needed to overload the specified operators.
 
 <div style="page-break-after: always;"></div>
@@ -167,7 +157,7 @@ Failure to complete assessment  will result in failure on the final exam.
 | 6 | Did all your programs run (of the ones turned in)? | Yes - No  | 
 | 7 | Are you taking advanced structures and algorithms next semester?  | Yes - No    | 
 | 8 | Are you a Computer Science Major?  | Yes - No  | 
-| 9 | If you answered no to number 8, what is your major? |     | 
+| 9 | If you answered no to number 8, what is your major? | _____________________    | 
 
 <div style="page-break-after: always;"></div>
 
