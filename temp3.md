@@ -44,7 +44,6 @@ def lcm(a, b):
     return a * b // gcd(a, b)
 
 class Fraction(object):
-
     def __init__(self,n=1,d=1):
         self.num = n
         self.den = d
@@ -99,6 +98,9 @@ books = [
 Using the book dictionary as a guide, write a `book class` that has the same items in each book (author,title,genre) as data members of your class. 
 
 
+<div style="page-break-after: always;"></div>
+
+
 ### Question 5
 (10 pts)
 
@@ -149,7 +151,7 @@ Failure to complete assessment  will result in failure on the final exam.
 
 |    |  Question                                             |        Answer                  |
 |----|-------------------------------------------------------|--------------------------|
-| 1 | What is your expected grade in this course:?  | A -  B -   C -  D -  F      |
+| 1 | What is your expected grade in this course:?  | A - B - C - D - F      |
 | 2 | What did you earn in CS 1?	 (A,B,C) | A - B - C   |
 | 3 | On a scale of 1-10 (10 being the hardest), on average, how hard were the programs? |  1 2 3 4 5 6 7 8 9 10     |
 | 4 | On a scale of 1-10 (10 being the hardest), on average, how hard was the course? | 1 2 3 4 5 6 7 8 9 10    |
@@ -157,7 +159,7 @@ Failure to complete assessment  will result in failure on the final exam.
 | 6 | Did all your programs run (of the ones turned in)? | Yes - No  | 
 | 7 | Are you taking advanced structures and algorithms next semester?  | Yes - No    | 
 | 8 | Are you a Computer Science Major?  | Yes - No  | 
-| 9 | If you answered no to number 8, what is your major? | _____________________    | 
+| 9 | If you answered no to number 8, what is your major? | "__________________________ "   | 
 
 <div style="page-break-after: always;"></div>
 
