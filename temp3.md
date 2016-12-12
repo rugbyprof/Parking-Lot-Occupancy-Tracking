@@ -1,5 +1,6 @@
 ## Final Exam 
 
+### Name _____________________________________
 1. Use pencil to answer all questions
 2. Do not cram too many answers on a sheet of paper.
 - Draw a line between each answer.
