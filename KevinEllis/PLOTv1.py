@@ -178,7 +178,7 @@ def drawBoundBox(img,  color):
     cv2.line(img, (len(img[0]), 0), (len(img[0]), len(img)), color, line_size)
 
 if __name__ == "__main__":
-    image = cv2.imread('image2.jpg', -1)
+    image = cv2.imread('1473696001.jpg', -1)
     image = cv2.resize(image,(640,480))
     red_color = (0,0,255)
     green_color = (0,255,0) 
