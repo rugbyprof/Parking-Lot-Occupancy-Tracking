@@ -282,10 +282,8 @@ def compareDiffs(avg1, avg2, spotName):
 
 #save image from url
 def saveImgUrl(url):
-
-
     #url = "http://download.thinkbroadband.com/10MB.zip"
-    file_name = url.split('/')[-1]
+    file_name = 'Origin_Images\\' + (url.split('/')[-1])
     u = urllib2.urlopen(url)
 
     infile = open(file_name, 'wb')
@@ -398,16 +396,16 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-    if numImgs > 20:
+    if numImgs > 10:
         break
     numImgs = numImgs + 1
 
+    #get image url and save image as a local file
     url = image['shot_url']+image['camera']+'/'+image['name']
     resultName = image['name']
-
     saveImgUrl(url)
 
-    img = cv2.imread(image['name'])
+    img = cv2.imread('Origin_Images\\' + image['name'])
 
     p_lot = []
     gray_spot = []
