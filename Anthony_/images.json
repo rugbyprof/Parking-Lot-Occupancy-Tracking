@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "count": 141,
+=======
+  "count": 142,
+>>>>>>> e79217e5f6c5e81b604f3c9cd6f3499446adfe12
   "data": [
     {
       "_id": "1473696001.west_virginia",
@@ -2115,6 +2119,24 @@
       "unix": "1485968401",
       "weekOfYear": "05",
       "weekday": "3"
+<<<<<<< HEAD
+=======
+    },
+    {
+      "_id": "1486054801.west_virginia",
+      "adjdate": "1486051201",
+      "camera": "west_virginia",
+      "created": "Feb-02-2017 @ 11:00 AM",
+      "dayOfYear": "033",
+      "ext": "jpg",
+      "name": "1486054801.jpg",
+      "shot_url": "http://cs.mwsu.edu/~griffin/p-lot/shots/",
+      "thumb_url": "http://cs.mwsu.edu/~griffin/p-lot/thumbs/",
+      "time": "1100",
+      "unix": "1486054801",
+      "weekOfYear": "05",
+      "weekday": "4"
+>>>>>>> e79217e5f6c5e81b604f3c9cd6f3499446adfe12
     }
   ]
 }

@@ -268,8 +268,8 @@ def compareDiffs(avg1, avg2, spotName):
     BR_diff = abs(BR1_diff - BR2_diff)
     GR_diff = abs(GR1_diff - GR2_diff)
 
-    print avg2
-    print spotName, ":", "BG: ", BG_diff/255.0, "BR: ", BR_diff/255.0, "GR: ", GR_diff/255.0, "\n"
+    #print avg2
+    #print spotName, ":", "BG: ", BG_diff/255.0, "BR: ", BR_diff/255.0, "GR: ", GR_diff/255.0, "\n"
     if BG_diff > max_diff:
         fails = fails + 1
     if BR_diff > max_diff:
@@ -328,7 +328,7 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     edges = cv2.Canny(spotforcanny,lower,upper)
     #print edges
     avg = averagePng(edges)
-    print parkingspacelocation, avg
+    #print parkingspacelocation, avg
     #plt.subplot(121),plt.imshow(spotforcanny,cmap = 'gray')
     #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
     plt.plot(122),plt.imshow(edges,cmap = 'gray')
@@ -398,7 +398,7 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-    if numImgs > 99:
+    if numImgs > 20:
         break
     numImgs = numImgs + 1
 
@@ -492,12 +492,16 @@ for image in images['data']:
                 #false positives HARD CODED
                 #if spotName == "Row_2_Col_1" or spotName == "Row_2_Col_12":
                     #img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, (255,0,0))   
+
                 if colorResult == False: #negatives (filled spots) from color test
                     drawBoundBox(parking_spot, red_color)
-                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)                        
+                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)   
+
+
                 elif edgesResult[0] == False: #negatives (filled spots) from edge detection test
                     drawBoundBox(parking_spot, red_color)
-                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)       
+                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)      
+
                 else: #others are assumed to be positives (empty spots)
                     drawBoundBox(parking_spot, green_color)
                     img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, green_color)     
