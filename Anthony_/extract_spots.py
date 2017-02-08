@@ -395,7 +395,7 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-    if numImgs > 0:
+    if numImgs > 99:
         break
     numImgs = numImgs + 1
 

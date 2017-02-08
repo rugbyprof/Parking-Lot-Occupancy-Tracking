@@ -398,7 +398,7 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-    if numImgs > 20:
+    if numImgs > 99:
         break
     numImgs = numImgs + 1
 
@@ -423,10 +423,10 @@ for image in images['data']:
             w,h = img.shape[:2]
             pt = Point(row_data)
             pt1 = Point([pt.x+h/10, pt.y+w/10])
-            print size, h/10, w/10
+            #print size, h/10, w/10
             gray_spot = cutParkingSpot(img, pt, pt1)
             gray_spot_avg = averageColors(gray_spot)
-            print "Gray Spot", gray_spot_avg
+            #print "Gray Spot", gray_spot_avg
             #cv2.imshow("Grayspot", gray_spot)
             #cv2.waitKey(0)
             saveImg(gray_spot, spot_dir, "1_Gray_Spot")
@@ -479,7 +479,7 @@ for image in images['data']:
                 #averaging values of red, green and blue colors in parking spot image
                 #print spotName, np.average(np.mean(parking_spot, 0), 0)
                 avg = averageColors(parking_spot)
-                print spotName, avg
+                #print spotName, avg
                 spots[spotName] = parking_spot
                 colorResult = withinRange(gray_spot_avg, avg, spotName) 
 
@@ -490,9 +490,9 @@ for image in images['data']:
                 #give spot specific color based on results
 
                 #false positives HARD CODED
-                if spotName == "Row_2_Col_1" or spotName == "Row_2_Col_12":
-                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, (255,0,0))   
-                elif colorResult == False: #negatives (filled spots) from color test
+                #if spotName == "Row_2_Col_1" or spotName == "Row_2_Col_12":
+                    #img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, (255,0,0))   
+                if colorResult == False: #negatives (filled spots) from color test
                     drawBoundBox(parking_spot, red_color)
                     img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)                        
                 elif edgesResult[0] == False: #negatives (filled spots) from edge detection test
