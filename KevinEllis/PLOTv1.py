@@ -118,7 +118,7 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
     plt.close()
     
-    if avg > 400:
+    if avg > 330:
         return False,edges
     return True,edges
 
@@ -151,7 +151,7 @@ def withinRange(avg1, avg2, spotName):
     
     #if grades[0] > range or grades[1] > range or green_diff > range:
     #    return False
-    return True
+    #return True
 
     #if blue_diff > range or green_diff > range or red_diff > range:
     #    return False
@@ -182,8 +182,10 @@ if __name__ == "__main__":
     image = cv2.resize(image,(640,480))
     red_color = (0,0,255)
     green_color = (0,255,0) 
+
     with open('parking.json') as data_file:
         data = json.load(data_file)
+
     for row in range (0,3):#0 -> number of rows of spots [fix with griffin's json]
         if row == 0:
             numspots = 5
@@ -211,7 +213,10 @@ if __name__ == "__main__":
             #  FOR COLOR DETECTION 
             gray_spot = cv2.imread('Spots/Row_0 Col_0.jpg')
             gray_spot_avg = averagecolors(gray_spot)
+            print(gray_spot_avg)
             avg = averagecolors(maskedparkingspace)
+            print(parkingspacelocation)
+            print(avg)
             colorResult = withinRange(gray_spot_avg, avg, parkingspacelocation) 
 
             #FOR EDGE DETECTION
@@ -229,4 +234,4 @@ if __name__ == "__main__":
             else:
                 drawBoundBox(maskedparkingspace, green_color)
                 image  = boxemup(image ,topleft,topright,botright,botleft, green_color)     
-cv2.imwrite('out.jpg', image)
+cv2.imwrite('output.jpg', image)

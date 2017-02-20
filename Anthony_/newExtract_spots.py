@@ -82,14 +82,12 @@ def histogram(image, name):
     # the figure and the flattened feature vector
     chans = cv2.split(image)
     #print chans
-
     colors = ("b", "g", "r")
     plt.figure()
     plt.title("'Flattened' Color Histogram")
     plt.xlabel("Bins")
     plt.ylabel("# of Pixels")
     features = []
- 
     # loop over the image channels
     for (chan, color) in zip(chans, colors):
 	    # create a histogram for the current channel and
@@ -103,8 +101,6 @@ def histogram(image, name):
 	    # plot the histogram
 	    plt.plot(hist, color = color)
 	    plt.xlim([0, 256])
-        
- 
     # here we are simply showing the dimensionality of the
     # flattened color histogram 256 bins for each channel
     # x 3 channels = 768 total values -- in practice, we would
@@ -112,12 +108,9 @@ def histogram(image, name):
     # between 32-96 bins are normally used, but this tends
     # to be application dependent
     #print "flattened feature vector size: %d" % (np.array(features).flatten().shape)
-    
-
     #save figure and close
     plt.savefig(os.path.join(histogram_dir, "Hist_" + name + ".png"))
     plt.close()
-
 #compare histograms
 def compareHistograms():
     # METHOD #1: UTILIZING OPENCV
@@ -179,22 +172,17 @@ def compareHistograms():
     # show the OpenCV methods
     plt.show()
 
-
-
 #cuts a parking spot and resizes the result to 1/10 of the original image
 def cutParkingSpot(img, point1, point2):
     parkingSpot = img[point1.y:point2.y, point1.x:point2.x]
     width, height = img.shape[:2]
     w,h = parkingSpot.shape[:2]
     resized_img = cv2.resize(parkingSpot, (width/10, height/10))
-
     return resized_img
     
-
 #draws line with color between point1 and point2 on img
 def draw_line(img, line, color):
     cv2.line(img, (line.startPt.x, line.startPt.y), (line.endPt.x, line.endPt.y), color, 1)
-
 
 #finds minimum x and y values from end points of 2 lines
 def find_min_point(line1, line2):
@@ -203,7 +191,6 @@ def find_min_point(line1, line2):
 
     min_point = Point([min_x, min_y])
     return min_point
-
 
 #finds maximum x and y values from end points of 2 lines
 def find_max_point(line1, line2):
@@ -282,12 +269,9 @@ def compareDiffs(avg1, avg2, spotName):
 
 #save image from url
 def saveImgUrl(url):
-
-
     #url = "http://download.thinkbroadband.com/10MB.zip"
     file_name = url.split('/')[-1]
     u = urllib2.urlopen(url)
-
     infile = open(file_name, 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
@@ -299,13 +283,11 @@ def saveImgUrl(url):
         buffer = u.read(block_sz)
         if not buffer:
             break
-
         file_size_dl += len(buffer)
         infile.write(buffer)
         status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
         status = status + chr(8)*(len(status)+1)
         print status,
-
     infile.close()
 
 #draw bounding box using lines of specified color around the image
@@ -344,7 +326,6 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
 def boxemup(image, left, right, color):
     line_sz = 2
     diff = 4
-
     #top hor
     cv2.line(image, (left.startPt.x+diff, left.startPt.y), (right.startPt.x-diff, right.startPt.y), color, line_sz)
     #bot hor
@@ -353,7 +334,6 @@ def boxemup(image, left, right, color):
     cv2.line(image, (left.startPt.x+diff, left.startPt.y), (left.endPt.x+diff, left.endPt.y), color, line_sz)
     #right vert
     cv2.line(image, (right.startPt.x-diff, right.startPt.y), (right.endPt.x-diff, right.endPt.y), color, line_sz)
-
     return image
 
 def sharpen(spot): #Sharpens the image for better edge detection
@@ -398,7 +378,7 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-    if numImgs > 20:
+    if numImgs > 1:
         break
     numImgs = numImgs + 1
 
