@@ -371,7 +371,7 @@ def sharpen(spot): #Sharpens the image for better edge detection
 
 
 
-with open('newParking.json') as data_file:
+with open('newJson.json') as data_file:
     data = json.load(data_file)
 
 black_color = (0,0,0)
@@ -412,6 +412,7 @@ for image in images['data']:
     gray_spot_avg = []
     spot_result = ""
 
+    gray = data["0"]
     #loop through rows in json
     for row_data in data:
         #append new row to parking lot
