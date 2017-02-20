@@ -53,12 +53,6 @@ def comparehist(): #not used ATM
     print('Bhattacharyya Distance:', BhattacharyyaDistance)
     print('Hellinger:', Hellinger )
 
-def getxval(num): #Gets the X value of spot from JSON
-    xval = int(data['Row'+str(row)+'_Col'+str(col)][num]['x'])
-    return (xval) 
-def getyval(num): #Gets the X value of spot from JSON
-    yval = int(data['Row'+str(row)+'_Col'+str(col)][num]['y'])
-    return (yval)
 
     #IS THIS NEEDED ANYMORE?
 def drawline(topleft,topright,botright,botleft,img): #Draws the Lines to the image
@@ -92,7 +86,7 @@ def average(image,index): #called by averagecolors function
                 count = count+1
     return float(sum) / count
 
-def averagePng(image):
+def averagePng(image): #for canny
     count = 0
     for row in image:
         for col in row:
@@ -100,7 +94,7 @@ def averagePng(image):
                 count = count + 1
     
     return count
-def averagecolors(image): #returns an array of [R,G,B] for that spot
+def averagecolors(image): #returns an array of [B,G,R] for that spot
     avg = [average(image,0) , average(image,1) , average(image, 2)]
     return (avg) #returns touple on rgbavg
 def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
@@ -117,7 +111,6 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     dirname = 'canny edges'
     plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
     plt.close()
-    
     if avg > 330:
         return False,edges
     return True,edges
@@ -136,18 +129,27 @@ def sharpen(spot): #Sharpens the image for better edge detection
     custom = cv2.filter2D(spot, -1, kernel)
     return custom
 
-def withinRange(avg1, avg2, spotName):
-    range = 0.2
+def withinRange(avg1, avg2):
+    #range = 0.2
+    threshold = 4
     blue_diff = abs(avg1[0]-avg2[0])
     green_diff = abs(avg1[1]-avg2[1])
     red_diff = abs(avg1[2]-avg2[2])
+    #print(blue_diff, green_diff, red_diff)
     avg_diff = (blue_diff + green_diff + red_diff)/3
-    grades = [blue_diff/255.0, green_diff/255.0, red_diff/255.0]
-    #print spotName, grades
-    
-    for grade in grades:
-        if grade > range:
-            return False
+    avgbluediff = abs(blue_diff - avg_diff)
+    avggreendiff = abs(green_diff - avg_diff)
+    avgreddiff = abs(red_diff - avg_diff)
+    #print(avgbluediff,avggreendiff,avgreddiff)
+    if((abs(blue_diff - avg_diff) < threshold) and (abs(green_diff - avg_diff) < threshold) and (abs(red_diff - avg_diff) < threshold)):
+        return True
+    else:  
+        return False
+
+    # grades = [blue_diff/255.0, green_diff/255.0, red_diff/255.0]
+    # for grade in grades:
+    #     if grade > range:
+    #         return False
     
     #if grades[0] > range or grades[1] > range or green_diff > range:
     #    return False
@@ -178,27 +180,19 @@ def drawBoundBox(img,  color):
     cv2.line(img, (len(img[0]), 0), (len(img[0]), len(img)), color, line_size)
 
 if __name__ == "__main__":
-    image = cv2.imread('1473696001.jpg', -1)
+    image = cv2.imread('image1.jpg', -1)
     image = cv2.resize(image,(640,480))
     red_color = (0,0,255)
     green_color = (0,255,0) 
 
-    with open('parking.json') as data_file:
+    with open('newj.json') as data_file:
         data = json.load(data_file)
-
-    for row in range (0,3):#0 -> number of rows of spots [fix with griffin's json]
-        if row == 0:
-            numspots = 5
-        if row == 1:
-            numspots = 13
-        if row == 2:
-            numspots= 12
-        for col in range (0,numspots): #0 -> number of spots in a row
-            parkingspacelocation = 'Row_' + str(row) + ' Col_' + str(col)
-            topleft = (getxval(0) , getyval(0))
-            topright = (getxval(1) , getyval(1))
-            botleft = (getxval(2) , getyval(2))
-            botright= (getxval(3) , getyval(3))
+    for parkingspot in data:
+            parkingspacelocation = "Space # " + str(parkingspot)
+            topleft = (int(data[parkingspot]['space'][0]['x']),int(data[parkingspot]['space'][0]['y']))
+            topright = (int(data[parkingspot]['space'][3]['x']),int(data[parkingspot]['space'][3]['y']))
+            botleft = (int(data[parkingspot]['space'][1]['x']),int(data[parkingspot]['space'][1]['y']))
+            botright= (int(data[parkingspot]['space'][2]['x']),int(data[parkingspot]['space'][2]['y']))
 
             #  CODE THAT APPLYS MASK TO PARKING SPACE
             masked_image = maskimage(topleft,topright,botright,botleft)
@@ -211,24 +205,24 @@ if __name__ == "__main__":
 
 
             #  FOR COLOR DETECTION 
-            gray_spot = cv2.imread('Spots/Row_0 Col_0.jpg')
+            gray_spot = cv2.imread('Spots/Space # 0.jpg')
             gray_spot_avg = averagecolors(gray_spot)
-            print(gray_spot_avg)
-            avg = averagecolors(maskedparkingspace)
             print(parkingspacelocation)
-            print(avg)
-            colorResult = withinRange(gray_spot_avg, avg, parkingspacelocation) 
-
+            #print('Gavg',gray_spot_avg)
+            avg = averagecolors(maskedparkingspace)
+            #print('Cavg',avg)
+            colorResult = withinRange(gray_spot_avg, avg) 
             #FOR EDGE DETECTION
             gray_image = cv2.cvtColor(maskedparkingspace, cv2.COLOR_BGR2GRAY)
             sharp = sharpen(gray_image)
             edgesResult = cannyedgedetection(sharp,parkingspacelocation)
+            print('\n')
 
 
-            if colorResult == False:
+            if edgesResult[0] == False:
                 drawBoundBox(maskedparkingspace, red_color)
                 image = boxemup(image ,topleft,topright,botright,botleft, red_color)                        
-            elif edgesResult[0] == False:
+            elif colorResult == False:
                 drawBoundBox(maskedparkingspace, red_color)
                 image  = boxemup(image ,topleft,topright,botright,botleft, red_color)       
             else:

@@ -82,12 +82,14 @@ def histogram(image, name):
     # the figure and the flattened feature vector
     chans = cv2.split(image)
     #print chans
+
     colors = ("b", "g", "r")
     plt.figure()
     plt.title("'Flattened' Color Histogram")
     plt.xlabel("Bins")
     plt.ylabel("# of Pixels")
     features = []
+ 
     # loop over the image channels
     for (chan, color) in zip(chans, colors):
 	    # create a histogram for the current channel and
@@ -101,6 +103,8 @@ def histogram(image, name):
 	    # plot the histogram
 	    plt.plot(hist, color = color)
 	    plt.xlim([0, 256])
+        
+ 
     # here we are simply showing the dimensionality of the
     # flattened color histogram 256 bins for each channel
     # x 3 channels = 768 total values -- in practice, we would
@@ -108,9 +112,12 @@ def histogram(image, name):
     # between 32-96 bins are normally used, but this tends
     # to be application dependent
     #print "flattened feature vector size: %d" % (np.array(features).flatten().shape)
+    
+
     #save figure and close
     plt.savefig(os.path.join(histogram_dir, "Hist_" + name + ".png"))
     plt.close()
+
 #compare histograms
 def compareHistograms():
     # METHOD #1: UTILIZING OPENCV
@@ -172,17 +179,22 @@ def compareHistograms():
     # show the OpenCV methods
     plt.show()
 
+
+
 #cuts a parking spot and resizes the result to 1/10 of the original image
 def cutParkingSpot(img, point1, point2):
     parkingSpot = img[point1.y:point2.y, point1.x:point2.x]
     width, height = img.shape[:2]
     w,h = parkingSpot.shape[:2]
     resized_img = cv2.resize(parkingSpot, (width/10, height/10))
+
     return resized_img
     
+
 #draws line with color between point1 and point2 on img
 def draw_line(img, line, color):
     cv2.line(img, (line.startPt.x, line.startPt.y), (line.endPt.x, line.endPt.y), color, 1)
+
 
 #finds minimum x and y values from end points of 2 lines
 def find_min_point(line1, line2):
@@ -191,6 +203,7 @@ def find_min_point(line1, line2):
 
     min_point = Point([min_x, min_y])
     return min_point
+
 
 #finds maximum x and y values from end points of 2 lines
 def find_max_point(line1, line2):
@@ -255,8 +268,8 @@ def compareDiffs(avg1, avg2, spotName):
     BR_diff = abs(BR1_diff - BR2_diff)
     GR_diff = abs(GR1_diff - GR2_diff)
 
-    #print avg2
-    #print spotName, ":", "BG: ", BG_diff/255.0, "BR: ", BR_diff/255.0, "GR: ", GR_diff/255.0, "\n"
+    print avg2
+    print spotName, ":", "BG: ", BG_diff/255.0, "BR: ", BR_diff/255.0, "GR: ", GR_diff/255.0, "\n"
     if BG_diff > max_diff:
         fails = fails + 1
     if BR_diff > max_diff:
@@ -269,9 +282,12 @@ def compareDiffs(avg1, avg2, spotName):
 
 #save image from url
 def saveImgUrl(url):
+
+
     #url = "http://download.thinkbroadband.com/10MB.zip"
-    file_name = 'Origin_Images\\' + (url.split('/')[-1])
+    file_name = url.split('/')[-1]
     u = urllib2.urlopen(url)
+
     infile = open(file_name, 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
@@ -283,11 +299,13 @@ def saveImgUrl(url):
         buffer = u.read(block_sz)
         if not buffer:
             break
+
         file_size_dl += len(buffer)
         infile.write(buffer)
         status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
         status = status + chr(8)*(len(status)+1)
         print status,
+
     infile.close()
 
 #draw bounding box using lines of specified color around the image
@@ -310,7 +328,7 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
     edges = cv2.Canny(spotforcanny,lower,upper)
     #print edges
     avg = averagePng(edges)
-    #print parkingspacelocation, avg
+    print parkingspacelocation, avg
     #plt.subplot(121),plt.imshow(spotforcanny,cmap = 'gray')
     #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
     plt.plot(122),plt.imshow(edges,cmap = 'gray')
@@ -326,6 +344,7 @@ def cannyedgedetection(spotforcanny,parkingspacelocation): #Detects edges
 def boxemup(image, left, right, color):
     line_sz = 2
     diff = 4
+
     #top hor
     cv2.line(image, (left.startPt.x+diff, left.startPt.y), (right.startPt.x-diff, right.startPt.y), color, line_sz)
     #bot hor
@@ -334,6 +353,7 @@ def boxemup(image, left, right, color):
     cv2.line(image, (left.startPt.x+diff, left.startPt.y), (left.endPt.x+diff, left.endPt.y), color, line_sz)
     #right vert
     cv2.line(image, (right.startPt.x-diff, right.startPt.y), (right.endPt.x-diff, right.endPt.y), color, line_sz)
+
     return image
 
 def sharpen(spot): #Sharpens the image for better edge detection
@@ -353,7 +373,7 @@ def sharpen(spot): #Sharpens the image for better edge detection
 
 
 
-with open('newJson.json') as data_file:
+with open('newParking.json') as data_file:
     data = json.load(data_file)
 
 black_color = (0,0,0)
@@ -378,27 +398,22 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-<<<<<<< HEAD
-    if numImgs > 1:
-=======
-    if numImgs > 10:
->>>>>>> f8de05261387965b5d2186ae155ab1ecece82d84
+    if numImgs > 0:
         break
     numImgs = numImgs + 1
 
-    #get image url and save image as a local file
     url = image['shot_url']+image['camera']+'/'+image['name']
     resultName = image['name']
+
     saveImgUrl(url)
 
-    img = cv2.imread('Origin_Images\\' + image['name'])
+    img = cv2.imread('1475510401.jpg')#cv2.imread(image['name'])
 
     p_lot = []
     gray_spot = []
     gray_spot_avg = []
     spot_result = ""
 
-    gray = data["0"]
     #loop through rows in json
     for row_data in data:
         #append new row to parking lot
@@ -408,10 +423,10 @@ for image in images['data']:
             w,h = img.shape[:2]
             pt = Point(row_data)
             pt1 = Point([pt.x+h/10, pt.y+w/10])
-            #print size, h/10, w/10
+            print size, h/10, w/10
             gray_spot = cutParkingSpot(img, pt, pt1)
             gray_spot_avg = averageColors(gray_spot)
-            #print "Gray Spot", gray_spot_avg
+            print "Gray Spot", gray_spot_avg
             #cv2.imshow("Grayspot", gray_spot)
             #cv2.waitKey(0)
             saveImg(gray_spot, spot_dir, "1_Gray_Spot")
@@ -464,7 +479,7 @@ for image in images['data']:
                 #averaging values of red, green and blue colors in parking spot image
                 #print spotName, np.average(np.mean(parking_spot, 0), 0)
                 avg = averageColors(parking_spot)
-                #print spotName, avg
+                print spotName, avg
                 spots[spotName] = parking_spot
                 colorResult = withinRange(gray_spot_avg, avg, spotName) 
 
@@ -475,18 +490,14 @@ for image in images['data']:
                 #give spot specific color based on results
 
                 #false positives HARD CODED
-                #if spotName == "Row_2_Col_1" or spotName == "Row_2_Col_12":
-                    #img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, (255,0,0))   
-
-                if colorResult == False: #negatives (filled spots) from color test
+                if spotName == "Row_2_Col_1" or spotName == "Row_2_Col_12":
+                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, (255,0,0))   
+                elif colorResult == False: #negatives (filled spots) from color test
                     drawBoundBox(parking_spot, red_color)
-                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)   
-
-
+                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)                        
                 elif edgesResult[0] == False: #negatives (filled spots) from edge detection test
                     drawBoundBox(parking_spot, red_color)
-                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)      
-
+                    img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, red_color)       
                 else: #others are assumed to be positives (empty spots)
                     drawBoundBox(parking_spot, green_color)
                     img = boxemup(img, p_lot[-1]['V'][-1], v_line_obj, green_color)     
