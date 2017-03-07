@@ -378,11 +378,7 @@ with open('images.json') as images_file:
 #loop through all images
 for image in images['data']:
 
-<<<<<<< HEAD
     if numImgs > 1:
-=======
-    if numImgs > 10:
->>>>>>> f8de05261387965b5d2186ae155ab1ecece82d84
         break
     numImgs = numImgs + 1
 
