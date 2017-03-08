@@ -111,7 +111,7 @@ def cannyedgedetection(spotforcanny): #Detects edges
     plt.plot(122),plt.imshow(edges,cmap = 'gray')
     plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
     dirname = 'canny edges'
-    #plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
+    plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
     plt.close()
     return avg
 
@@ -258,7 +258,7 @@ def saveImgUrl(url, file_name):
 #     images = json.load(images_file)
 
 #load parking lot data
-with open('UFPR05.json') as data_file:
+with open('UFPR05_test.json') as data_file:
     lot_data = json.load(data_file)
 
 with open('UFPR05_emptyData.json') as emptyLotFile:
@@ -272,7 +272,7 @@ if __name__ == "__main__":
 
     #loop through snapshots
     for img in lot_shots:
-        if numImg > 10:
+        if numImg > 1:
             break
         numImg = numImg+1
 
@@ -327,9 +327,9 @@ if __name__ == "__main__":
                 spotColors.append([topleft, topright, botleft, botright, red_color])
                 #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
             # elif edgesDiff > 700:
-            #     drawBoundBox(maskedparkingspace, red_color)
-            #     spotColors.append([topleft, topright, botleft, botright, red_color])
-            #     #image = boxemup(image ,topleft,topright,botright,botleft, red_color)       
+            #      drawBoundBox(maskedparkingspace, red_color)
+            #      spotColors.append([topleft, topright, botleft, botright, red_color])
+            #      image = boxemup(image ,topleft,topright,botright,botleft, red_color)       
             else:
                 drawBoundBox(maskedparkingspace, green_color)
                 spotColors.append([topleft, topright, botleft, botright, green_color])
