@@ -1,4 +1,6 @@
-# Eureka-ParkingLotDetection
+Eureka-ParkingLotDetection
+==========================
+
 Parking Lot Occupancy Tracking
 
 ## Wiki
