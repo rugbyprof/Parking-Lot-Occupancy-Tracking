@@ -99,8 +99,8 @@ def averagePng(image): #for canny
 def averagecolors(image): #returns an array of [B,G,R] for that spot
     avg = [average(image,0) , average(image,1) , average(image, 2)]
     return (avg) #returns touple on rgbavg
-def cannyedgedetection(spotforcanny): #Detects edges
-    sigma=0.30
+def cannyedgedetection(spotforcanny, parkingspacelocation): #Detects edges
+    sigma=0.33
     v = np.median(spotforcanny)
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
@@ -110,8 +110,9 @@ def cannyedgedetection(spotforcanny): #Detects edges
     #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
     plt.plot(122),plt.imshow(edges,cmap = 'gray')
     plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-    dirname = 'canny edges'
+    dirname = 'CannyEmpty\\'
     #plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
+    cv2.imwrite(dirname+parkingspacelocation+'Edge.bmp', edges)
     plt.close()
     return avg
 
@@ -239,6 +240,7 @@ if __name__ == "__main__":
     
     spotNum = 1
     for parkingspot in lot_coords:
+        parkingspacelocation = 'Space_#_'+str(parkingspot[0])
         topleft = (int(parkingspot[1][3]['x']),int(parkingspot[1][3]['y']))
         topright = (int(parkingspot[1][2]['x']),int(parkingspot[1][2]['y']))
         botleft = (int(parkingspot[1][0]['x']),int(parkingspot[1][0]['y']))
@@ -257,9 +259,10 @@ if __name__ == "__main__":
         print str(parkingspot[0]), avg
 
         #EDGES
-        gray_image = cv2.cvtColor(maskedparkingspace, cv2.COLOR_BGR2GRAY)
-        sharp = sharpen(gray_image)
-        edgesAvg = cannyedgedetection(sharp)
+        denoise = cv2.fastNlMeansDenoisingColored(maskedparkingspace,None,20,21,7,31)
+        gray_image = cv2.cvtColor(denoise, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(gray_image,(5,5),0)
+        edgesAvg = cannyedgedetection(blur, parkingspacelocation)
 
 
         f.write('['+str(parkingspot[0])+', ['+str(avg[0])+','+str(avg[1])+','+str(avg[2])+'], '+str(edgesAvg)+']')
