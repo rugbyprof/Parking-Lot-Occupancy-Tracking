@@ -246,24 +246,6 @@ def saveImgUrl(url, file_name):
     infile.close()
 
 
-
-
-#all images taken at timeOfDay
-#timeOfDay = '1100'
-#req = urllib2.urlopen('http://cs.mwsu.edu/~griffin/p-lot/apiproxy.php?time=' + timeOfDay)
-#req = ''.join(req)
-
-#f = open("images.json", "w")
-
-#p_json = json.loads(req)
-#f.write(str(p_json))
-#f.close()
-
-#load images from api json
-# with open('images.json') as images_file:
-#     images = json.load(images_file)
-
-#load parking lot data
 with open('UFPR05_test.json') as data_file:
     lot_data = json.load(data_file)
 
@@ -272,14 +254,14 @@ with open('UFPR05_emptyData.json') as emptyLotFile:
 
 if __name__ == "__main__":
 
-    numImg = 1
+    numImg = 10 #how many images to run over?
     addup = 0
     lot_shots = lot_data['data']['snapshots'] #snapshots of actual p-lots
     lot_coords = lot_data['data']['coords'] #coordinates of spots in p-lot
 
     #loop through snapshots
-    for img in lot_shots:
-        if numImg > 1 :
+    for img in lot_shots: #loop through the images
+        if numImg < 1 :
             break
         numImg = numImg+1
         addup = addup + 1
@@ -333,15 +315,18 @@ if __name__ == "__main__":
                 print('OPEN \n')
             else:  
                 print('TAKEN \n')
+
+            #--BELOW IS WHERE WE APPLY THE ALGORITHMS TO DIFFERENT THRESHOLDS--
+            
             #print "size masked img", maskedparkingspace.shape
                 #image = boxemup(image ,topleft,topright,botright,botleft, red_color)  
             # if colorResult[0] == False or colorResult[1] == False:
             #     drawBoundBox(maskedparkingspace, red_color)
             #     spotColors.append([topleft, topright, botleft, botright, red_color])
             #     #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
-            if median < 50:
-                 drawBoundBox(maskedparkingspace, red_color)
-                 spotColors.append([topleft, topright, botleft, botright, red_color])
+            if median > 80:
+                 drawBoundBox(maskedparkingspace, green_color)
+                 spotColors.append([topleft, topright, botleft, botright, green_color])
             elif numberofwhite[1] <= 11: #uses the ratio
                  drawBoundBox(maskedparkingspace, red_color)
                  spotColors.append([topleft, topright, botleft, botright, red_color])
