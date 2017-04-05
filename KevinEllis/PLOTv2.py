@@ -1,6 +1,7 @@
 import cv2
 import os
 import json
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -65,7 +66,7 @@ def drawline(topleft,topright,botright,botleft,img): #Draws the Lines to the ima
 
 def saveparkingspace(newimg,spot): #Saves each Individual spot in Spots Folder
     dirname = 'Spots'
-    resizeimage = spot#cv2.resize(spot,(50,70)) #resizes image to 50 x 70
+    resizeimage = cv2.resize(spot,(50,70)) #resizes image to 50 x 70
     cv2.imwrite(os.path.join(dirname, newimg + '.jpg'), resizeimage)
 
 def maskimage(img, topleft,topright,botright,botleft): #Masks the image. 
@@ -88,33 +89,38 @@ def average(image,index): #called by averagecolors function
                 
     return float(sum) / count
 
-def averagePng(image): #for canny
+def countwhite(image): #for canny
+    im=Image.open( "canny edges/"+ parkingspacelocation +"Edge.bmp" )
+    width,height = im.size
+    actualpixel = width * height
     count = 0
     for row in image:
         for col in row:
             if col == 255:
                 count = count + 1
-    
-    return count
+    ratioofwhitepixels = (actualpixel / count)
+    print "Number of pixels in image: " ,actualpixel
+    print "Ratio of white to image: " ,ratioofwhitepixels
+    return count,ratioofwhitepixels
 def averagecolors(image): #returns an array of [B,G,R] for that spot
     avg = [average(image,0) , average(image,1) , average(image, 2)]
     return (avg) #returns touple on rgbavg
 def cannyedgedetection(spotforcanny): #Detects edges
-    sigma=0.30
+    sigma=0.33
     v = np.median(spotforcanny)
+
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
-    edges = cv2.Canny(spotforcanny,lower,upper)
-    avg = averagePng(edges)
-    #plt.subplot(121),plt.imshow(spotforcanny,cmap = 'gray')
-    #plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-    plt.plot(122),plt.imshow(edges,cmap = 'gray')
-    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-    dirname = 'canny edges'
-    #plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
-    plt.close()
-    return avg
 
+    edges = cv2.Canny(spotforcanny,lower,upper)
+    white = countwhite(edges) #recieves a touple (num whitepixels,ratio of white to whole image)
+
+    dirname = 'canny edges\\'
+    #plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
+    cv2.imwrite(dirname+parkingspacelocation+'Edge.bmp', edges)
+    #plt.savefig(os.path.join(dirname, parkingspacelocation +  'Edge' + '.png'),transparent=True) #Saves the image to Edges folder
+    #plt.close()
+    return white
 def sharpen(spot): #Sharpens the image for better edge detection
     #Create the identity filter, but with the 1 shifted to the right!
     kernel = np.zeros( (9,9), np.float32)
@@ -136,7 +142,7 @@ def withinange(avg1, avg2):
     red_diff = abs(avg1[2]-avg2[2])
     avg_diff = (blue_diff + green_diff + red_diff)/3
     grades = [blue_diff/255.0, green_diff/255.0, red_diff/255.0]
-    print grades
+    #print grades
     for grade in grades:
         if grade > range:
             return False
@@ -146,8 +152,8 @@ def withinange(avg1, avg2):
     return True
 def withinRange(avg1, avg2):
     #range = 0.2
-    print avg1
-    print avg2
+    #print avg1
+    #print avg2
     threshold = 4
     blue_diff = abs(avg1[0]-avg2[0])
     green_diff = abs(avg1[1]-avg2[1])
@@ -157,7 +163,7 @@ def withinRange(avg1, avg2):
     avgbluediff = abs(blue_diff - avg_diff)
     avggreendiff = abs(green_diff - avg_diff)
     avgreddiff = abs(red_diff - avg_diff)
-    print(avgbluediff,avggreendiff,avgreddiff)
+    #print(avgbluediff,avggreendiff,avgreddiff)
     if((abs(blue_diff - avg_diff) < threshold) and (abs(green_diff - avg_diff) < threshold) and (abs(red_diff - avg_diff) < threshold)):
         return True
     else:  
@@ -180,11 +186,11 @@ def compareDiffs(avg1, avg2):
     GR_diff = abs(GR1_diff - GR2_diff)
 
     #print avg2
-    print avg1
-    print avg2
-    print BG1_diff, BR1_diff, GR1_diff
-    print BG2_diff, BR2_diff, GR2_diff
-    print BG_diff, BR_diff, GR_diff
+    #print avg1
+    #print avg2
+    #print BG1_diff, BR1_diff, GR1_diff
+    #print BG2_diff, BR2_diff, GR2_diff
+    #print BG_diff, BR_diff, GR_diff
     #print spotName, ":", "BG: ", BG_diff/255.0, "BR: ", BR_diff/255.0, "GR: ", GR_diff/255.0, "\n"
     if BG_diff > max_diff:
         fails = fails + 1
@@ -258,7 +264,7 @@ def saveImgUrl(url, file_name):
 #     images = json.load(images_file)
 
 #load parking lot data
-with open('UFPR05.json') as data_file:
+with open('UFPR05_test.json') as data_file:
     lot_data = json.load(data_file)
 
 with open('UFPR05_emptyData.json') as emptyLotFile:
@@ -267,15 +273,16 @@ with open('UFPR05_emptyData.json') as emptyLotFile:
 if __name__ == "__main__":
 
     numImg = 1
+    addup = 0
     lot_shots = lot_data['data']['snapshots'] #snapshots of actual p-lots
     lot_coords = lot_data['data']['coords'] #coordinates of spots in p-lot
 
     #loop through snapshots
     for img in lot_shots:
-        if numImg > 10:
+        if numImg > 1 :
             break
         numImg = numImg+1
-
+        addup = addup + 1
         url = img[1]['img'] #snapshot's url
         
         img_name = img[0]+".jpg"
@@ -286,6 +293,7 @@ if __name__ == "__main__":
         #image = cv2.resize(image,(640,480))
         red_color = (0,0,255)
         green_color = (0,255,0)
+        blue_color= (255,0,0)
         
         spotColors = []
         for parkingspot in lot_coords:
@@ -304,32 +312,46 @@ if __name__ == "__main__":
             #histogram(maskedparkingspace,parkingspacelocation)
 
             #  FOR COLOR DETECTION 
-            gray_spot = cv2.imread('Spots/Space_#_1.jpg')
-            gray_spot_avg = averagecolors(gray_spot)
+            denoise = cv2.fastNlMeansDenoisingColored(maskedparkingspace,None,20,21,7,31)
             print(parkingspacelocation)
             #print('Gavg',gray_spot_avg)
-            avg = averagecolors(maskedparkingspace)
+            avg = averagecolors(denoise)
             #print('Cavg',avg)
             colorResult = [withinange(emptyLot_data['spots'][parkingspot[0]-1][1], avg), 
             compareDiffs(emptyLot_data['spots'][parkingspot[0]-1][1], avg)]
 
             #FOR EDGE DETECTION
-            gray_image = cv2.cvtColor(maskedparkingspace, cv2.COLOR_BGR2GRAY)
-            sharp = sharpen(gray_image)
-            edgesAvg = cannyedgedetection(sharp)
-            edgesDiff = abs(edgesAvg - emptyLot_data['spots'][parkingspot[0]-1][2])
-            print edgesAvg, emptyLot_data['spots'][parkingspot[0]-1][2]
-            print "Edge diff: ", edgesDiff
-            
+            gray_image = cv2.cvtColor(denoise, cv2.COLOR_BGR2GRAY)
+            blur = cv2.GaussianBlur(gray_image,(5,5),0)
+            numberofwhite = cannyedgedetection(blur) #recives a touple
+            whitediffromempty = numberofwhite[0] - emptyLot_data['spots'][parkingspot[0]-1][2]
+            #print numberofwhite[0], emptyLot_data['spots'][parkingspot[0]-1][2]
+            print "Diff of whitepixels: ", whitediffromempty
+            median = np.median(blur)
+            print "Median: " , median
+            if (int(lot_data['data']['snapshots'][addup][1]["lotSnapshot"][str(parkingspot[0])]) == 0):
+                print('OPEN \n')
+            else:  
+                print('TAKEN \n')
             #print "size masked img", maskedparkingspace.shape
-            if colorResult[0] == False or colorResult[1] == False:
-                drawBoundBox(maskedparkingspace, red_color)
-                spotColors.append([topleft, topright, botleft, botright, red_color])
-                #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
-            # elif edgesDiff > 700:
+                #image = boxemup(image ,topleft,topright,botright,botleft, red_color)  
+            # if colorResult[0] == False or colorResult[1] == False:
             #     drawBoundBox(maskedparkingspace, red_color)
             #     spotColors.append([topleft, topright, botleft, botright, red_color])
-            #     #image = boxemup(image ,topleft,topright,botright,botleft, red_color)       
+            #     #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
+            if median < 50:
+                 drawBoundBox(maskedparkingspace, red_color)
+                 spotColors.append([topleft, topright, botleft, botright, red_color])
+            elif numberofwhite[1] <= 11: #uses the ratio
+                 drawBoundBox(maskedparkingspace, red_color)
+                 spotColors.append([topleft, topright, botleft, botright, red_color])
+            elif whitediffromempty > 200:
+                drawBoundBox(maskedparkingspace, red_color)
+                spotColors.append([topleft, topright, botleft, botright, blue_color])
+                #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
+            # elif colorResult[0] == False or colorResult[1] == False:
+            #       drawBoundBox(maskedparkingspace, red_color)
+            #       spotColors.append([topleft, topright, botleft, botright, red_color])      
             else:
                 drawBoundBox(maskedparkingspace, green_color)
                 spotColors.append([topleft, topright, botleft, botright, green_color])
