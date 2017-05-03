@@ -98,7 +98,7 @@ def countwhite(image): #for canny
         for col in row:
             if col == 255:
                 count = count + 1
-    ratioofwhitepixels = (actualpixel / count)
+    ratioofwhitepixels = float(actualpixel) / count
     print "Number of pixels in image: " ,actualpixel
     print "Ratio of white to image: " ,ratioofwhitepixels
     return count,ratioofwhitepixels
@@ -223,6 +223,7 @@ def drawBoundBox(img, color):
     cv2.line(img, (len(img[0]), 0), (len(img[0]), len(img)), color, line_size)
 
 #save image from url
+
 def saveImgUrl(url, file_name):
     #url = "http://download.thinkbroadband.com/10MB.zip"
     #file_name = 'Origin_Images\\' + (url.split('/')[-1])
@@ -246,7 +247,7 @@ def saveImgUrl(url, file_name):
     infile.close()
 
 
-with open('UFPR05_test.json') as data_file:
+with open('UFPR05.json') as data_file:
     lot_data = json.load(data_file)
 
 with open('UFPR05_emptyData.json') as emptyLotFile:
@@ -255,15 +256,21 @@ with open('UFPR05_emptyData.json') as emptyLotFile:
 if __name__ == "__main__":
 
     numImg = 10 #how many images to run over?
+    nonchangenumImg = numImg
     addup = 0
     lot_shots = lot_data['data']['snapshots'] #snapshots of actual p-lots
     lot_coords = lot_data['data']['coords'] #coordinates of spots in p-lot
 
     #loop through snapshots
+    sumoverallaverage = 0 #to calculate average correctness of all images ran
+    numwhiteratiothreshold = 10 #threshold for numwhiteratio algorithm
+    numwhiteratiothresholdstart = numwhiteratiothreshold #where to start threshold
+    numwhiteratiothresholdend = 17 #where to end threshold
     for img in lot_shots: #loop through the images
         if numImg < 1 :
             break
-        numImg = numImg+1
+        
+        numImg = numImg - 1
         addup = addup + 1
         url = img[1]['img'] #snapshot's url
         
@@ -278,7 +285,10 @@ if __name__ == "__main__":
         blue_color= (255,0,0)
         
         spotColors = []
+        sumoftakenspots = 0
+        percentcorrect = 0
         for parkingspot in lot_coords:
+            decidedfullorempty = 0
             parkingspacelocation = "Space_#_" + str(parkingspot[0]) #item 0 is the spot number
             topleft = (int(parkingspot[1][3]['x']),int(parkingspot[1][3]['y']))
             topright = (int(parkingspot[1][2]['x']),int(parkingspot[1][2]['y']))
@@ -311,39 +321,47 @@ if __name__ == "__main__":
             print "Diff of whitepixels: ", whitediffromempty
             median = np.median(blur)
             print "Median: " , median
+
+
+            #--BELOW IS WHERE WE APPLY THE ALGORITHMS TO DIFFERENT THRESHOLDS--
+            if median < 70: #if yes then the spot is taken
+                 drawBoundBox(maskedparkingspace, red_color)
+                 spotColors.append([topleft, topright, botleft, botright, red_color])
+                 decidedfullorempty = 1
+            elif numberofwhite[1] <= numwhiteratiothreshold: #if yes then the spot is taken   #was 17
+                 drawBoundBox(maskedparkingspace, red_color)
+                 spotColors.append([topleft, topright, botleft, botright, red_color])
+                 decidedfullorempty = 1
+            elif whitediffromempty > 90: #if yes then the spot is taken
+                drawBoundBox(maskedparkingspace, red_color)
+                spotColors.append([topleft, topright, botleft, botright, red_color])
+                decidedfullorempty = 1
+            # elif colorResult[0] == False or colorResult[1] == False: #if yes then spot is taken
+            #     drawBoundBox(maskedparkingspace, red_color)
+            #     spotColors.append([topleft, topright, botleft, botright, red_color]) 
+            #     decidedfullorempty = 1    
+            else: # else the spot is empty
+                drawBoundBox(maskedparkingspace, green_color)
+                spotColors.append([topleft, topright, botleft, botright, green_color])
+                decidedfullorempty = 0
+
+
             if (int(lot_data['data']['snapshots'][addup][1]["lotSnapshot"][str(parkingspot[0])]) == 0):
                 print('OPEN \n')
             else:  
                 print('TAKEN \n')
-
-            #--BELOW IS WHERE WE APPLY THE ALGORITHMS TO DIFFERENT THRESHOLDS--
             
-            #print "size masked img", maskedparkingspace.shape
-                #image = boxemup(image ,topleft,topright,botright,botleft, red_color)  
-            # if colorResult[0] == False or colorResult[1] == False:
-            #     drawBoundBox(maskedparkingspace, red_color)
-            #     spotColors.append([topleft, topright, botleft, botright, red_color])
-            #     #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
-            if median > 80:
-                 drawBoundBox(maskedparkingspace, green_color)
-                 spotColors.append([topleft, topright, botleft, botright, green_color])
-            elif numberofwhite[1] <= 11: #uses the ratio
-                 drawBoundBox(maskedparkingspace, red_color)
-                 spotColors.append([topleft, topright, botleft, botright, red_color])
-            elif whitediffromempty > 200:
-                drawBoundBox(maskedparkingspace, red_color)
-                spotColors.append([topleft, topright, botleft, botright, blue_color])
-                #image  = boxemup(image ,topleft,topright,botright,botleft, red_color)
-            # elif colorResult[0] == False or colorResult[1] == False:
-            #       drawBoundBox(maskedparkingspace, red_color)
-            #       spotColors.append([topleft, topright, botleft, botright, red_color])      
-            else:
-                drawBoundBox(maskedparkingspace, green_color)
-                spotColors.append([topleft, topright, botleft, botright, green_color])
-                #image = boxemup(image ,topleft,topright,botright,botleft, green_color)
-            
+            if (int(lot_data['data']['snapshots'][addup][1]["lotSnapshot"][str(parkingspot[0])]) == decidedfullorempty):
+                sumoftakenspots = sumoftakenspots + 1
             saveparkingspace(parkingspacelocation,maskedparkingspace)
 
         for spot in spotColors:
             image = boxemup(image, spot[0], spot[1], spot[3], spot[2], spot[4])
+        print(sumoftakenspots)
+        percentcorrect = (float(sumoftakenspots) / 40) * 100
+        sumoverallaverage = sumoverallaverage + percentcorrect
+        print(percentcorrect)
+        print(numwhiteratiothreshold)
+        numwhiteratiothreshold =  numwhiteratiothreshold + (numwhiteratiothresholdend - numwhiteratiothresholdstart) / 100.0
         cv2.imwrite('Output_Images\\'+img_name, image)
+    print(sumoverallaverage)
