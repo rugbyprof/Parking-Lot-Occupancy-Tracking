@@ -247,7 +247,7 @@ def saveImgUrl(url, file_name):
     infile.close()
 
 
-with open('UFPR05.json') as data_file:
+with open('out.json') as data_file:
     lot_data = json.load(data_file)
 
 with open('UFPR05_emptyData.json') as emptyLotFile:
@@ -255,7 +255,7 @@ with open('UFPR05_emptyData.json') as emptyLotFile:
 
 if __name__ == "__main__":
 
-    numImg = 10 #how many images to run over?
+    numImg = 100 #how many images to run over?
     nonchangenumImg = numImg
     addup = 0
     lot_shots = lot_data['data']['snapshots'] #snapshots of actual p-lots
