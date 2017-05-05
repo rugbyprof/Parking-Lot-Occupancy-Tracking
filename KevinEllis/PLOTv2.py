@@ -247,7 +247,7 @@ def saveImgUrl(url, file_name):
     infile.close()
 
 
-with open('out.json') as data_file:
+with open('UFPR05_105.json') as data_file:
     lot_data = json.load(data_file)
 
 with open('UFPR05_emptyData.json') as emptyLotFile:
@@ -255,12 +255,12 @@ with open('UFPR05_emptyData.json') as emptyLotFile:
 
 if __name__ == "__main__":
 
-    numImg = 100 #how many images to run over?
-    nonchangenumImg = numImg
-    addup = 0
     lot_shots = lot_data['data']['snapshots'] #snapshots of actual p-lots
     lot_coords = lot_data['data']['coords'] #coordinates of spots in p-lot
 
+    numImg = len(lot_shots) #how many images to run over?
+    nonchangenumImg = numImg
+    addup = 0
     #loop through snapshots
     sumoverallaverage = 0 #to calculate average correctness of all images ran
     numwhiteratiothreshold = 10 #threshold for numwhiteratio algorithm
@@ -271,7 +271,6 @@ if __name__ == "__main__":
             break
         
         numImg = numImg - 1
-        addup = addup + 1
         url = img[1]['img'] #snapshot's url
         
         img_name = img[0]+".jpg"
@@ -363,5 +362,6 @@ if __name__ == "__main__":
         print(percentcorrect)
         print(numwhiteratiothreshold)
         numwhiteratiothreshold =  numwhiteratiothreshold + (numwhiteratiothresholdend - numwhiteratiothresholdstart) / 100.0
+        addup = addup + 1
         cv2.imwrite('Output_Images\\'+img_name, image)
-    print(sumoverallaverage)
+    print(sumoverallaverage/nonchangenumImg)
