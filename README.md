@@ -3,6 +3,8 @@ Eureka-ParkingLotDetection
 
 Parking Lot Occupancy Tracking
 
+[![Waffle.io - Issues in progress](https://badge.waffle.io/rugbyprof/Parking-Lot-Occupancy-Tracking.png?label=in%20progress&title=In%20Progress)](http://waffle.io/rugbyprof/Parking-Lot-Occupancy-Tracking)
+
 ## Wiki
 
 Don't forget we need to keep our **[wiki](../../wiki)** updated!
