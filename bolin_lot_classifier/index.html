@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=1024">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Lot Classification Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./css/3-col-portfolio.css" rel="stylesheet">
+    <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="./css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <script src="https://use.fontawesome.com/10cfe476bb.js"></script>
+
+    <style>
+        #fade-wrapper {
+            display: none;
+            position: fixed;
+            height: 100vh;
+            width: 100vw;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            padding: 0.1px;
+        }
+
+        .form_datetime {
+            margin: 20px;
+        }
+
+        .famenu {
+            color: darkgrey;
+            font-size: 20px;
+        }
+
+        .nav-link.a {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <div id="fade-wrapper"></div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container" style="margin-left:10px">
+            <a class="navbar-brand" href="./index.html">Parking Lot Classifier</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="empty-all">
+                            <i class="fa fa-check-circle famenu" style="color:green;" aria-hidden="true"></i> Empty All
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="occupy-all">
+                            <i class="fa fa-times-circle famenu" style="color:red;" aria-hidden="true"></i> Occupy All
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="invert-all">
+                            <i class="fa fa-share-square famenu" aria-hidden="true"></i> Invert
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link unusable" href="#" id="">
+                            <i class="fa fa-trash famenu" aria-hidden="true"></i> Unusable
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link save" href="#" id="">
+                            <i class="fa fa-save famenu" aria-hidden="true"></i> Save
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="exit">
+                            <i class="fa fa-window-close famenu" aria-hidden="true"></i> Exit
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+
+
+    <!-- Page Heading -->
+    <div class="row" style="margin-bottom:-40px;margin-top:50px">
+        <div class="col-lg-1 col-sm-2 portfolio-item">
+        </div>
+        <div class="col-lg-2 col-sm-2 portfolio-item">
+            <h5 class="my-4">&emsp;Bolin Parking Lot</h5>
+        </div>
+        <div class="col-lg-4 col-sm-4 portfolio-item">
+            <div class="input-append date form_datetime" data-date="2013-02-21T15:25:00Z">
+                <i class="fa fa-calendar" aria-hidden="true" style="color:darkgrey;z-index:99"></i>
+                <input id="selectedDate" size="24" type="text" value="" readonly>
+                <span class="add-on">
+                    <i class="icon-remove"></i>
+                </span>
+                <span class="add-on">
+                    <i class="icon-calendar"></i>
+                </span>
+                <span style="color:rgb(148, 152, 155);" id="imageID">
+                </span>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-sm-2 portfolio-item mr-0 pr-0 ">
+            <h6 id="editorEmail" class="my-4 pull-right"></h6>
+        </div>
+        <div class="col-lg-1 col-sm-2 pr-0 portfolio-item">
+            <i class="fa fa-user pull-left my-4 fa-lg" aria-hidden="true" style="color:darkgrey;z-index:99"></i>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col portfolio-item d-flex justify-content-end align-items-center">
+            <a class="page-link" href="#" id="previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </div>
+        <div class="col portfolio-item d-flex justify-content-center align-items-center">
+            <canvas id="canvas"  width="1150" height="647" style="border:1px solid #000000;"></canvas>
+        </div>
+        <div class="col portfolio-item d-flex justify-content-start align-items-center">
+            <a class="page-link" href="#" id="next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center">
+
+        <div class="col-sm  d-flex justify-content-center align-items-center">
+            <div id="totalImages"></div>
+        </div>
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <div id="imagesByYou"></div>
+        </div>
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <div id="totalClassified"></div>
+        </div>
+
+    </nav>
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/fabric.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script>
+
+        var canvas;
+        var imgJson, lotJson, adjPoints, spaceImgArray, spaceArray, editorEmail, dateParam, initialRoute;
+
+        initialRoute = "./lot_image?daylight=1";
+
+        if (localStorage.getItem("userEmail") == null) {
+            window.location.replace("./login.html");
+
+        } else {
+            editorEmail = localStorage.getItem("userEmail");
+            document.getElementById("editorEmail").innerHTML = editorEmail;
+        }
+
+
+        if (localStorage.getItem("selectedDate") == null) {
+            dateParam = "";
+
+        } else {
+            dateParam = "&date=" + localStorage.getItem("selectedDate");
+        }
+
+
+        // get any get params from the url.
+        // Terry used to flag whether or not to get previous overlay
+        var queryDict = {}
+        location.search.substr(1).split("&").forEach(function (item) {
+            queryDict[item.split("=")[0]] = item.split("=")[1]
+        })
+
+        //console.log(queryDict);
+
+        //var myRequest = new Request('http://cs.mwsu.edu/~griffin/p-lot/bolin_parking_lot/lot_image?daylight=1');
+        //var img_url;
+
+        route = localStorage.getItem("route");
+        if (route == null) {
+            route = initialRoute + dateParam;
+        }
+        console.log("ROUTE: ", route);
+        var requestX = $.getJSON(route, function (json) {
+            imgJson = json;
+            console.log(imgJson);
+            if (imgJson == "error") {
+                localStorage.setItem("route", initialRoute);
+                localStorage.removeItem("selectedDate");
+                alert("No image available!");
+                location.reload(true);
+            }
+            else {
+                localStorage.setItem("selectedDate", imgJson.image_data.date_created);
+                $.post(//lock the image
+                    `./lock_image/1/${imgJson.image_data.image_id}/1`, {},
+                    function (data) {
+                        //alert("Response: " + data + imgJson.image_data.image_id);
+                        //location.reload(true);
+                    }
+                );
+            }
+        });
+
+        var requestY = $.getJSON("./lot/1", function (json) {
+            lotJson = JSON.parse(json.json);
+            console.log(lotJson);
+        });
+
+        $.getJSON("./image_number", function (json) {
+            $('#totalImages').html("<h6 style=\"color:#CACFD2;\" >Total Images: " + json + "&emsp;&emsp;&nbsp;</h6>");
+        });
+        $.getJSON("./image_number?user=" + editorEmail, function (json) {
+            $('#imagesByYou').html("<h6 style=\"color:#CACFD2;\" >Images You Classified: " + json + "&nbsp;&nbsp;&nbsp;&nbsp;</h6>");
+        });
+        $.getJSON("./image_number?classified=1", function (json) {
+            $('#totalClassified').html("<h6 style=\"color:#CACFD2;\" >Total Classified Images: " + json + "</h6>");
+        });
+
+
+
+
+        $.when(requestX, requestY).then(function () {
+
+            $('#imageID').html("&emsp;&emsp;Image ID: " + imgJson.image_data.image_id);
+            canvas = new fabric.Canvas('canvas');
+            let image_id = imgJson.image_data.image_id;
+            let lot_id = imgJson.image_data.lot_id;
+            let img_url = imgJson.image_data.img_url;
+            var img = new Image();
+
+            adjPoints = []; // will hold 'adjusted' points and be used for looking up
+            // original spot to be marked as occupied or not.
+            // Think of it as a parallel array with lotJson used to id
+            // the origal spot since were adusting coords.
+
+            spaceImgArray = [] // used to keep track of added images. the space.id will
+            // be used as an index to place the checkmarks etc in the
+            // array so we can delete them later if necessary
+
+            spaceArray = [] // used to keep track of added spaces. Almost like the spaceImgArray
+            // but it's NOT
+
+
+            for (var i = 0, len = lotJson.length; i < len; i++) {
+                let points = lotJson[i].contour.point; //pull points out of json
+                //console.log(lotJson[i].contour.point);
+                let spot = []; // spot is an array of multiple points
+                spaceImgArray[i] = 0; //init to zero to hold space
+                adjPoints[i] = []; //array to hold adjusted points because of image size changes
+
+                // loop through a spaces points
+                for (var j = 0; j < points.length; j++) {
+
+                    //console.log("Point" + j + ": " + points[j]['x'], points[j]['y']);
+                    let adjp = adjustPoint(points[j]['x'], points[j]['y'], 1920, 1150);
+                    //console.log(adjp);
+                    adjPoints[i].push(adjp);
+                    spot.push(new fabric.Point(adjp.x, adjp.y))
+                }
+
+                // add first point in space to close the polygon 
+                spot.push(spot[0]);
+
+                // create a new space
+                let space = new fabric.Polyline(spot, {
+                    id: i, //create our own id
+                    strokeWidth: 1,
+                    fill: false,
+                    stroke: 'red',
+                    originX: 0,
+                    originY: 0,
+                    //originX: 'center',
+                    //originY: 'center',
+                    selectable: false,
+
+                });
+
+                //add space to array of spaces
+                spaceArray.push(space);
+
+                // add space to canvas
+                canvas.add(space);
+            }
+
+            //original size of image 1920 x 1080
+            img.onload = function () {
+                // this is syncronous
+                var f_img = new fabric.Image(img);
+                canvas.setBackgroundImage(f_img);
+                canvas.renderAll();
+            };
+
+            img.width = 1150;
+            img.height = (1150 / 1920) * 1080;
+            img.src = img_url;
+            console.log(img_url);
+
+            canvas.on('mouse:up', function (options) {
+                //get mouse click position
+                var pointer = canvas.getPointer(options.e);
+                var posX = pointer.x;
+                var posY = pointer.y;
+                //get all objects to loop through
+                var arrObj = canvas.getObjects();
+                if (options.target != null) {
+                    let id = options.target.id;
+
+                    var centerX = arrObj[id].aCoords.tl.x + (arrObj[id].aCoords.br.x - arrObj[id].aCoords
+                        .tl.x) / 2;
+                    var centerY = arrObj[id].aCoords.tl.y + (arrObj[id].aCoords.br.y - arrObj[id].aCoords
+                        .tl.y) / 2;
+
+                    //console.log("X: "+centerX + "Y: "+ centerY )
+                    dist = Math.sqrt((centerX - posX) * (centerX - posX) + (centerY - posY) * (centerY -
+                        posY))
+                    //console.log("Dist: "+dist);
+                    //console.log(options.target.get('type'));
+                    if (options.target.get('type') == 'polyline' && dist < 20) {
+                        // if(spaceImgArray[id] != 0){
+                        //     canvas.setActiveObject(spaceImgArray[id]);
+                        //     var object = canvas.getActiveObject();
+                        //     canvas.remove(object);
+                        // }
+                        canvas.forEachObject(function (obj) {
+                            if (obj != null && obj.id === id && obj.get('type') == 'image') {
+                                obj.remove();
+                            }
+                        });
+                        mark_spot(id);
+                    } else if (options.target.get('type') == 'image') {
+                        var object = canvas.getActiveObject();
+                        canvas.remove(object);
+                        spaceImgArray[id] = 0;
+                        mark_spot(id);
+                        canvas.renderAll();
+                    }
+                }
+                //canvas.discardActiveObject();
+            });
+        });
+
+        function mark_spot(id, ) {
+            //console.log(id);
+            let target = spaceArray[id];
+
+            if (target) {
+                //console.log(target);
+                let x = target.minX;
+                let y = target.minY;
+                let w = target.width;
+                let h = target.height;
+
+                spaceImgArray[id] = new Image();
+                spaceImgArray[id].onload = function (img) {
+                    var check = new fabric.Image(spaceImgArray[target.id], {
+                        id: id,
+                        left: x + w / 2 - 12,
+                        top: y + h / 2 - 12,
+                        scaleX: 1,
+                        scaleY: 1,
+                        selectable: true
+                    });
+                    canvas.add(check);
+                };
+                //swapping a locations occupancy
+                let sbit = update_lot_json(id);
+                if (sbit) {
+                    spaceImgArray[id].src = './images/occupied.png';
+                } else {
+                    spaceImgArray[id].src = './images/open.png';
+                }
+            }
+        }
+
+        function update_lot_json(id) {
+            if (lotJson[id].occupied == 0) {
+                lotJson[id].occupied = 1;
+            } else {
+                lotJson[id].occupied = 0;
+            }
+            //console.log("occupied:" + lotJson[id].occupied);
+            return lotJson[id].occupied;
+        }
+
+        $('#occupy-all').click(function (e) {
+            e.preventDefault();
+            //console.log("clicked");
+            //canvas.clear();
+            for (i = 0; i < lotJson.length; i++) {
+                lotJson[i].occupied = 0;
+                //canvas.getItemByAttr('id', spaceImgArray[i]).remove();
+                canvas.forEachObject(function (obj) {
+                    if (obj != null && obj.id === i && obj.get('type') == 'image') {
+                        obj.remove();
+                    }
+                });
+                //canvas.renderAll();
+                mark_spot(i);
+            }
+        });
+
+        $('#empty-all').click(function (e) {
+            e.preventDefault();
+            //console.log("clicked");
+            //canvas.clear();
+            for (i = 0; i < lotJson.length; i++) {
+                lotJson[i].occupied = 1;
+                canvas.forEachObject(function (obj) {
+                    if (obj != null && obj.id === i && obj.get('type') == 'image') {
+                        obj.remove();
+                    }
+                });
+                //canvas.getItemByAttr('id', spaceImgArray[i]).remove();
+                mark_spot(i);
+            }
+        });
+
+
+        $('#invert-all').click(function (e) {
+            e.preventDefault();
+            for (i = 0; i < lotJson.length; i++) {
+                // if (lotJson[i].occupied == 1) {
+                //     lotJson[i].occupied = 0;;
+                // } else {
+                //     lotJson[i].occupied = 1;
+                // }
+                canvas.forEachObject(function (obj) {
+                    if (obj != null && obj.id === i && obj.get('type') == 'image') {
+                        obj.remove();
+                    }
+                });
+                mark_spot(i);
+            }
+        });
+
+        $('#exit').click(function (e) {
+            e.preventDefault();
+            $.post(//unlock the image
+                `./lock_image/1/${imgJson.image_data.image_id}/0`, {},
+                function (data) {
+                    //alert("Response: " + data + imgJson.image_data.image_id);
+                    //location.reload(true);
+                }
+            );
+
+            localStorage.clear();
+            window.location.replace("./login.html");
+
+            //disable page
+            //$(':input').attr('disabled', 'disabled');
+            //$('#fade-wrapper').fadeIn();
+
+
+            console.log("EXIT");
+        });
+
+        $('#previous').click(function (e) {
+            $.post(//unlock the image
+                `./lock_image/1/${imgJson.image_data.image_id}/0`, {},
+                function (data) {
+                    //alert("Response: " + data + imgJson.image_data.image_id);
+                    //location.reload(true);
+                }
+            );
+            e.preventDefault();
+            preRoute = "./lot_image?order=DESC&prev=1&daylight=1" + "&date=" + localStorage.getItem("selectedDate");
+            localStorage.setItem("route", preRoute);
+            location.reload(true);
+            console.log("Pre");
+        });
+
+        $('.save').click(function (e) {
+            e.preventDefault();
+            console.log("saving...");
+            console.log(lotJson);
+            let id = imgJson.image_data.image_id;
+            $.post(
+                "./save/1/" + id, {
+                    userEmail: editorEmail,
+                    data: lotJson
+
+                },
+                function (data) {
+                    console.log(data);
+                    //window.location = "./index.html?prev_overlay=true&imageId="+id;
+                    nextRoute = initialRoute + dateParam;
+                    localStorage.setItem("route", nextRoute);
+                    location.reload(true);
+                }
+
+            );
+        });
+
+
+        $('.unusable').click(function (e) {
+            e.preventDefault();
+            let id = imgJson.image_data.image_id;
+            $.post(
+                "./save/1/" + id, {
+                    userEmail: editorEmail,
+                    data: "unusable"
+
+                },
+                function (data) {
+                    console.log(data);
+                    //window.location = "./index.html?prev_overlay=true&imageId="+id;
+                    nextRoute = initialRoute + dateParam;
+                    localStorage.setItem("route", nextRoute);
+                    location.reload(true);
+                }
+
+            );
+        });
+
+        $('#next').click(function (e) {
+            e.preventDefault();
+            $.post(//unlock the image
+                `./lock_image/1/${imgJson.image_data.image_id}/0`, {},
+                function (data) {
+                    //alert("Response: " + data + imgJson.image_data.image_id);
+                    //location.reload(true);
+                }
+            );
+            nextRoute = initialRoute + "&date=" + localStorage.getItem("selectedDate");
+            localStorage.setItem("route", nextRoute);
+            location.reload(true);
+        });
+
+        $('#selectedDate').change(function () {
+            //save selected date in local storage
+            $.post(//unlock the image
+                `./lock_image/1/${imgJson.image_data.image_id}/0`, {},
+                function (data) {
+                    //alert("Response: " + data + imgJson.image_data.image_id);
+                    //location.reload(true);
+                }
+            );
+            localStorage.setItem("selectedDate", Math.floor(new Date($('#selectedDate').val()).getTime() / 1000));
+            localStorage.removeItem("route");
+            window.location = "./index.html";
+            //window.location = "./index.html";
+        });
+
+        /**
+         * x = coord x
+         * y = coord y
+         * ow = original image width
+         * oh = original image height
+         * cw = container width
+         * ch = container height
+         */
+        function adjustPoint(x, y, ow, cw) {
+            //original size of image 1920 x 1080
+            //Everything is adjusted based on width.
+            let xadj = cw / ow; //get ratio of container size / original image width
+            //let yadj = ((cw / ow) * oh) / oh;
+            //xadj = .65
+            // yadj = .67
+            x = x * xadj;
+            y = y * xadj;
+            return {
+                x: Math.floor(x),
+                y: Math.floor(y)
+            }
+        }
+
+        // Used for the calendar plugin
+        var c = new Date();
+        var y = c.getFullYear();
+        var m = c.getMonth() + 1;
+        var d = c.getDate();
+        $(".form_datetime").datetimepicker({
+            format: "mm/dd/yyyy",
+            autoclose: true,
+            todayBtn: true,
+            startDate: '2017-12-19',
+            endDate: '-0d',
+            minView: 2
+        });
+    </script>
+
+
+</body>
+
+</html>
+
+<!-- let min_distance = 90000;
+let index = -1;
+for (var i = 0; i < adjPoints.length; i++) {
+    for (var j = 0; j < adjPoints[i].length; j++) {
+        let x2 = adjPoints[i][j].x;
+        let y2 = adjPoints[i][j].y;
+
+        let distance = Math.hypot(Math.abs(x1 - x2), Math.abs(y1 - y2))
+        if (distance < min_distance) {
+            min_distance = distance;
+            index = i;
+        }
+    }
+}
+
+if (lotJson[index].occupied == 0) {
+    lotJson[index].occupied = 1;
+} else {
+    lotJson[index].occupied = 0;
+}
+console.log(lotJson[index])
+return lotJson[index].occupied; -->
