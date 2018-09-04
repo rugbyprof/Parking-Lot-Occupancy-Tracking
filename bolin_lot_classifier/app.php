@@ -422,7 +422,7 @@ function lot_overlay($request, $response, $args)
 
     $data = [];
     //$data['unlocked'] = _lock_image($lot_id, $image_id);
-    $data['sql'] = $sql;
+    //$data['sql'] = $sql;
     $data['success'] = ($result !== false);
     $data['data'] = $row;
 
@@ -734,6 +734,7 @@ function _error_handler($response, $error)
         ->withHeader('Content-Type', 'application/json')
         ->write(json_encode($error));
 }
+
 /****************************************************************************************************
  * MODELS
  ****************************************************************************************************/

@@ -240,7 +240,7 @@
 
         var requestY = $.getJSON("./lot/1", function (json) {
             lotJson = JSON.parse(json.json);
-            console.log(lotJson);
+            //console.log(lotJson);
         });
 
         $.getJSON("./image_number", function (json) {
@@ -301,7 +301,7 @@
                 // create a new space
                 let space = new fabric.Polyline(spot, {
                     id: i, //create our own id
-                    strokeWidth: 1,
+                    strokeWidth: 2,
                     fill: false,
                     stroke: 'red',
                     originX: 0,
@@ -309,6 +309,7 @@
                     //originX: 'center',
                     //originY: 'center',
                     selectable: false,
+                    opacity: 0.3,
 
                 });
 
@@ -318,6 +319,18 @@
                 // add space to canvas
                 canvas.add(space);
             }
+
+
+            if (localStorage.getItem("lotJson") != null) {// get lot data from local storage if available
+                lotJson = JSON.parse(localStorage.getItem("lotJson"));
+                console.log(lotJson);
+                for (var i = 0; i < lotJson.length; i++) {
+                    if(lotJson[i].occupied == 1){
+                        mark_spot(i,false);
+                    }
+                }
+            }
+
 
             //original size of image 1920 x 1080
             img.onload = function () {
@@ -374,10 +387,11 @@
                 }
                 //canvas.discardActiveObject();
             });
+
         });
 
-        function mark_spot(id, ) {
-            //console.log(id);
+        function mark_spot(id, clicked = true ) {
+            console.log("ID: "+id);
             let target = spaceArray[id];
 
             if (target) {
@@ -400,8 +414,11 @@
                     canvas.add(check);
                 };
                 //swapping a locations occupancy
-                let sbit = update_lot_json(id);
-                if (sbit) {
+                if(clicked){
+                    update_lot_json(id);
+                }
+
+                if (lotJson[id].occupied) {
                     spaceImgArray[id].src = './images/occupied.png';
                 } else {
                     spaceImgArray[id].src = './images/open.png';
@@ -511,6 +528,7 @@
             console.log("saving...");
             console.log(lotJson);
             let id = imgJson.image_data.image_id;
+            localStorage.setItem("lotJson", JSON.stringify(lotJson));
             $.post(
                 "./save/1/" + id, {
                     userEmail: editorEmail,
@@ -532,21 +550,25 @@
         $('.unusable').click(function (e) {
             e.preventDefault();
             let id = imgJson.image_data.image_id;
-            $.post(
-                "./save/1/" + id, {
-                    userEmail: editorEmail,
-                    data: "unusable"
+            
+            if (confirm("Are you sure this image is unusable?")) {
+                $.post(
+                    "./save/1/" + id, {
+                        userEmail: editorEmail,
+                        data: "unusable"
 
-                },
-                function (data) {
-                    console.log(data);
-                    //window.location = "./index.html?prev_overlay=true&imageId="+id;
-                    nextRoute = initialRoute + dateParam;
-                    localStorage.setItem("route", nextRoute);
-                    location.reload(true);
-                }
+                    },
+                    function (data) {
+                        console.log(data);
+                        //window.location = "./index.html?prev_overlay=true&imageId="+id;
+                        nextRoute = initialRoute + dateParam;
+                        localStorage.setItem("route", nextRoute);
+                        location.reload(true);
+                    }
 
-            );
+                );
+            }
+
         });
 
         $('#next').click(function (e) {
