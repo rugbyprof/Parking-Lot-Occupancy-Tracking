@@ -1,1 +1,0 @@
-Our ongoing research paper.
