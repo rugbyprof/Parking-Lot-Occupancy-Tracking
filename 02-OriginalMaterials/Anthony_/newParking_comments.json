@@ -1,0 +1,46 @@
+[
+    //Row 1
+    [
+        //horizontal lines
+        [
+            //top horizontal line with 2 points
+           [
+                [ 415, 79 ], [585, 83]
+           ],
+           //bottom horizontal line with 2 points
+           [
+               [418, 116], [ 593, 106]
+           ]
+        ],
+
+        //vertical lines
+        [
+            [415, 418], //two x coordinates for first vertical line
+            [452, 458], //two x coordinates for second vertical line
+            [487, 493],
+            [518, 526],
+            [553, 563],
+            [585, 593]
+        ]
+    ],
+
+    //Row 2
+    [
+        
+    ],
+
+    //Row 3
+    [
+
+    ]
+
+
+    /*
+
+    .
+    .
+    .
+
+    */
+
+]
